@@ -4,16 +4,16 @@
 Build a backend-only Pokémon team analysis tool using Spring Boot.
 
 ## Phase 1: Project setup
-- [ ] Create Spring Boot project
-- [ ] Set up package structure
-- [ ] Add `/api/health` endpoint
-- [ ] Confirm project runs locally
+- [x] Create Spring Boot project
+- [x] Set up package structure
+- [x] Add `/api/health` endpoint
+- [x] Confirm project runs locally
 
 ## Phase 2: Pokémon lookup
-- [ ] Add PokéAPI client
-- [ ] Add `GET /api/pokemon/{name}` endpoint
-- [ ] Normalize Pokémon response into internal DTO
-- [ ] Handle invalid Pokémon names cleanly
+- [x] Add PokéAPI client
+- [x] Add `GET /api/pokemon/{name}` endpoint
+- [x] Normalize Pokémon response into internal DTO
+- [x] Handle invalid Pokémon names cleanly
 
 ## Phase 3: Team analysis
 - [ ] Add `POST /api/team/analyze` endpoint

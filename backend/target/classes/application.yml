@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: pokemon-backend
+
+pokemon:
+  api:
+    base-url: https://pokeapi.co/api/v2

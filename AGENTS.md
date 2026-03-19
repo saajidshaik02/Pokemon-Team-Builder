@@ -57,3 +57,9 @@ After completing a task:
 - summarize what changed
 - list any assumptions made
 - mention any follow-up work that is still needed
+
+When a task is completed:
+- update docs/tasks.md to reflect completed checklist items
+- update docs/session-log.md with a short summary of work completed
+- update README.md if API usage or run instructions changed
+- do not mark items complete unless they are actually working

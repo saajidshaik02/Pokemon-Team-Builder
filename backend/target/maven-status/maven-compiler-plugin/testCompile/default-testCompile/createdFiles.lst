@@ -1,0 +1,4 @@
+com\example\pokemon\controller\HealthControllerTest.class
+com\example\pokemon\mapper\PokemonMapperTest.class
+com\example\pokemon\service\PokemonServiceTest.class
+com\example\pokemon\controller\PokemonControllerTest.class
