@@ -2,9 +2,9 @@
 
 Pokemon Team Builder is a Pokemon team analysis project with:
 - a completed Spring Boot backend in `backend/`
-- a planned React frontend in `frontend/`
+- a React frontend scaffold in `frontend/`
 
-The backend already supports Pokemon lookup and team analysis through REST endpoints. The next implementation phase is building the React UI on top of those endpoints.
+The backend already supports Pokemon lookup and team analysis through REST endpoints. The frontend Phase 1 setup is now in place with Vite, React Router, Axios, shared layout, and shared UI primitives.
 
 ## Current status
 
@@ -19,6 +19,13 @@ Planned frontend views:
 - Pokedex
 - Team Builder
 - Team Analysis
+
+Current frontend setup includes:
+- Vite React scaffold
+- route-ready pages for Pokedex, Team Builder, and Team Analysis
+- Axios API helpers for backend requests
+- shared app shell, loading state, error notice, and image loader components
+- sprite-first and artwork-first image selection utility
 
 ## UI direction
 
@@ -37,7 +44,7 @@ The frontend should use those patterns in a lighter way:
 ```text
 backend/   Spring Boot API
 docs/      Architecture, assumptions, tasks, and session log
-frontend/  Planned React application, not scaffolded yet
+frontend/  React frontend scaffold and Phase 1 setup
 ```
 
 ## Backend structure
@@ -84,7 +91,9 @@ The backend runs on `http://localhost:8080` by default.
 - Axios
 - CSS with shared design tokens and responsive layouts
 
-## Planned frontend structure
+Vite is used because it provides a faster development server, lighter setup, and simpler build configuration for this project than older React scaffolds.
+
+## Frontend structure
 
 ```text
 frontend/
@@ -106,7 +115,7 @@ frontend/
     main.jsx
 ```
 
-## Planned frontend component breakdown
+## Frontend component breakdown
 
 ### Pokedex
 
@@ -122,7 +131,9 @@ Main components:
 Behavior:
 - search by Pokemon name
 - call `GET /api/pokemon/{name}`
-- prefer backend-provided `officialArtworkUrl` and fallback to `spriteUrl` when needed
+- use `spriteUrl` for quick lookup states and profile previews
+- use `officialArtworkUrl` for polished detailed Pokemon views when available
+- fallback from `officialArtworkUrl` to `spriteUrl` when needed
 - show types, abilities, and stats
 - show backend error messages for invalid names
 
@@ -140,7 +151,7 @@ Behavior:
 - display 6 visible slots
 - allow add and remove actions
 - prevent adding more than 6 Pokemon
-- use official artwork when available and sprite fallback for filled slots
+- use `spriteUrl` for filled team slots
 - use plus-style empty slot visuals for unfilled slots
 
 ### Team Analysis
@@ -160,8 +171,7 @@ Behavior:
 
 ## Running the frontend locally
 
-These commands are for the planned React app once `frontend/` is scaffolded:
-
+Use these commands from the scaffolded React app:
 ```bash
 cd frontend
 npm install
@@ -172,7 +182,15 @@ Recommended local setup:
 1. Start the backend on `http://localhost:8080`.
 2. Start the frontend development server from `frontend/`.
 3. Configure the frontend base API URL through an environment variable such as `VITE_API_BASE_URL=http://localhost:8080`.
-4. Prefer backend-provided `officialArtworkUrl` once that field exists, and fallback to `spriteUrl` if artwork is missing.
+4. Use `spriteUrl` for search and team-slot views, and use `officialArtworkUrl` for polished detailed or analysis views with `spriteUrl` fallback.
+
+Verification commands:
+
+```bash
+cd frontend
+npm run lint
+npm run build
+```
 
 ## API examples
 
@@ -216,12 +234,10 @@ Response:
     "specialDefense": 50,
     "speed": 90
   },
+  "officialArtworkUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
   "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
 }
 ```
-
-The current backend response exposes `spriteUrl`.
-If the frontend continues to call only the backend, the backend should be extended to expose both `officialArtworkUrl` and `spriteUrl` so the UI can prefer artwork and fallback to sprites cleanly.
 
 ### Team analysis
 

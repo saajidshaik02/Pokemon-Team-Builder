@@ -10,6 +10,7 @@ import java.util.List;
  * @param types ordered Pokemon types
  * @param abilities Pokemon abilities
  * @param stats normalized base stats
+ * @param officialArtworkUrl official artwork URL exposed by the API when available
  * @param spriteUrl sprite URL exposed by the API
  */
 public record PokemonDetailsResponse(
@@ -18,6 +19,7 @@ public record PokemonDetailsResponse(
         List<String> types,
         List<String> abilities,
         PokemonStatsResponse stats,
+        String officialArtworkUrl,
         String spriteUrl
 ) {
 }

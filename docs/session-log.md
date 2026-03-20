@@ -251,3 +251,57 @@ Verify that the documentation still matches the actual backend implementation be
 
 ### Notes
 - This verification pass found no issue with backend validation or error-response documentation
+
+## Session 10
+### Goal
+Align the backend image contract and frontend planning docs with the final sprite-vs-artwork decision.
+
+### Completed
+- Extended the backend Pokemon lookup DTO to expose both `officialArtworkUrl` and `spriteUrl`
+- Extended the raw PokeAPI sprite model and mapper to extract official artwork URLs from the upstream response
+- Updated controller, mapper, and service tests to use the new two-image DTO contract
+- Updated `docs/tasks.md`, `docs/assumptions.md`, and `docs/architecture.md` to document sprite-first and artwork-first frontend behavior by view
+- Updated `README.md` so the documented API example now matches the expanded backend image contract
+
+### Decisions made
+- Use `spriteUrl` for quick lookup states, team slots, and future dynamic or battle-style views
+- Use `officialArtworkUrl` for polished detailed Pokemon cards and Team Analysis summaries
+- Keep frontend fallback behavior explicit: artwork falls back to sprite when needed
+- Keep the frontend calling only the backend, not PokeAPI directly
+
+### Next steps
+- Scaffold the frontend under `frontend/`
+- Build a shared image utility that supports both sprite-first and artwork-first modes
+- Start frontend Phase 1 using the now-expanded backend image contract
+
+### Notes
+- A backend test run could not be completed in this sandbox because Maven still attempted to use an unwritable local repository path
+
+## Session 11
+### Goal
+Implement Frontend Phase 1 and verify the scaffold locally.
+
+### Completed
+- Scaffolded the React frontend under `frontend/` using Vite
+- Installed and configured React Router and Axios
+- Added `api`, `components`, `pages`, `layouts`, `hooks`, and `styles` folders
+- Replaced the Vite starter app with route-ready pages for Pokedex, Team Builder, and Team Analysis
+- Added a shared app shell with header navigation, responsive content area, and footer
+- Added shared `LoadingState`, `ErrorNotice`, and `ImageLoader` components
+- Added a shared image utility supporting `sprite-first` and `artwork-first` behavior
+- Added environment-based backend URL configuration with `frontend/.env.example`
+- Verified the frontend with `npm run lint` and `npm run build`
+- Updated README, architecture, assumptions, and tasks to reflect the completed Phase 1 setup
+
+### Decisions made
+- Keep Phase 1 focused on platform setup and route scaffolding rather than implementing the full Pokedex and analysis flows
+- Use a shared image utility so later pages can choose sprite-first or artwork-first behavior without duplicating logic
+- Downgrade Vite to a Node-compatible version for the current local environment
+
+### Next steps
+- Implement the actual Pokedex lookup UI and API interaction
+- Implement Team Builder forms and validation
+- Implement Team Analysis result rendering from live backend responses
+
+### Notes
+- `npm create vite@latest` and dependency installation required running outside the sandbox because npm registry access is restricted there

@@ -39,6 +39,7 @@ class PokemonControllerTest {
                 List.of("electric"),
                 List.of("static", "lightning-rod"),
                 new PokemonStatsResponse(35, 55, 40, 50, 50, 90),
+                "https://example.test/pikachu-artwork.png",
                 "https://example.test/pikachu.png"
         );
 
@@ -52,6 +53,7 @@ class PokemonControllerTest {
                 .andExpect(jsonPath("$.types[0]").value("electric"))
                 .andExpect(jsonPath("$.abilities[0]").value("static"))
                 .andExpect(jsonPath("$.stats.specialAttack").value(50))
+                .andExpect(jsonPath("$.officialArtworkUrl").value("https://example.test/pikachu-artwork.png"))
                 .andExpect(jsonPath("$.spriteUrl").value("https://example.test/pikachu.png"));
     }
 

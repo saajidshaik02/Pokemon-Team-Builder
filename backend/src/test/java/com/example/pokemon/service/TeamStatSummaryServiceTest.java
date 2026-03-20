@@ -47,6 +47,7 @@ class TeamStatSummaryServiceTest {
                 types,
                 List.of(),
                 new PokemonStatsResponse(hp, attack, defense, specialAttack, specialDefense, speed),
+                "https://example.test/" + name + "-artwork.png",
                 "https://example.test/" + name + ".png"
         );
     }

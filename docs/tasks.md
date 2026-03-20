@@ -28,38 +28,39 @@ Documentation alignment:
 
 ## Phase 1: Frontend planning and setup
 
-- [ ] Create a React app under `frontend/`
-- [ ] Use Vite for frontend bootstrapping and document the choice
-- [ ] Add frontend folders for `api`, `components`, `pages`, `layouts`, `hooks`, and `styles`
-- [ ] Add React Router for the main frontend views
-- [ ] Add Axios for backend HTTP calls
-- [ ] Confirm the backend API exposes enough image data for official artwork and sprite fallback
-- [ ] Add an environment-based backend base URL configuration
-- [ ] Add shared app shell layout with header, navigation, and responsive content container
-- [ ] Add global CSS variables for type colors, spacing, shadows, and breakpoints
-- [ ] Add reusable loading, empty-state, and error-state UI components
+- [x] Create a React app under `frontend/`
+- [x] Use Vite for frontend bootstrapping and document the choice
+- [x] Add frontend folders for `api`, `components`, `pages`, `layouts`, `hooks`, and `styles`
+- [x] Add React Router for the main frontend views
+- [x] Add Axios for backend HTTP calls
+- [x] Ensure the backend API contract exposes both `spriteUrl` and `officialArtworkUrl`
+- [x] Add an environment-based backend base URL configuration
+- [x] Add shared app shell layout with header, navigation, and responsive content container
+- [x] Add global CSS variables for type colors, spacing, shadows, and breakpoints
+- [x] Add reusable loading, empty-state, and error-state UI components
+- [x] Add shared image utility that selects the correct image type for each view
 
 ## Phase 2: Pokedex view
 
 - [ ] Create `PokedexPage`
 - [ ] Create `PokemonSearchForm` with single-name input and submit action
-- [ ] Create `PokemonCard` for official artwork or sprite, name, and type badges
+- [ ] Create `PokemonCard` that supports both sprite and official artwork rendering
 - [ ] Create `PokemonAbilitiesList`
 - [ ] Create `PokemonStatsPanel` with numeric values and progress bars
 - [ ] Create `TypeBadge` component with per-type styling
 - [ ] Add frontend validation for blank Pokemon names
 - [ ] Call `GET /api/pokemon/{name}` through the frontend API layer
-- [ ] Extend the backend Pokemon response contract if needed so official artwork URL is available to the frontend
-- [ ] Support backend-provided `officialArtworkUrl` when available
-- [ ] Fallback to classic sprite URLs when official artwork is missing
+- [ ] Use `spriteUrl` for quick Pokemon search results and profile-style lookup previews
+- [ ] Use `officialArtworkUrl` for polished detailed Pokemon views when available
+- [ ] Fallback from `officialArtworkUrl` to `spriteUrl` when official artwork is missing
 - [ ] Add image loading skeleton or loading state for Pokemon images
 - [ ] Add image fallback handling for missing or broken artwork URLs
 - [ ] Show loading, success, empty, and invalid-name error states
 
 Pokedex view breakdown:
 - Components needed: `PokedexPage`, `PokemonSearchForm`, `PokemonCard`, `PokemonAbilitiesList`, `PokemonStatsPanel`, `TypeBadge`, `LoadingState`, `ErrorNotice`, `ImageLoader`
-- Data flow: search form -> API helper -> `GET /api/pokemon/{name}` -> normalized response stored in page state -> image resolver chooses official artwork first and sprite second -> detail components render from state
-- UX display: large artwork area, strong type badges, readable stat bars, inline validation, image loading state while artwork resolves, backend error message shown near the search form
+- Data flow: search form -> API helper -> `GET /api/pokemon/{name}` -> normalized response stored in page state -> search and quick profile states use `spriteUrl`, detailed display can switch to `officialArtworkUrl` with `spriteUrl` fallback -> detail components render from state
+- UX display: quick lookup can feel lively with sprite usage, detailed card can use official artwork for a cleaner profile view, stat bars remain readable, backend error message stays near the search form
 - Step-by-step sub-tasks:
 - [ ] Wire the page route and layout entry
 - [ ] Build the search form and controlled input state
@@ -73,22 +74,23 @@ Pokedex view breakdown:
 
 - [ ] Create `TeamBuilderPage`
 - [ ] Create `TeamSlotsGrid` with exactly 6 visible slots
-- [ ] Create `TeamSlotCard` for official artwork or sprite, name, and remove action
+- [ ] Create `TeamSlotCard` for sprite-first team-slot rendering, with artwork support if needed later
 - [ ] Create `EmptyTeamSlot` with plus icon or add action
 - [ ] Create `AddPokemonForm` for adding a Pokemon to the team
 - [ ] Create `TeamValidationMessage` for duplicate, blank, and max-size errors
 - [ ] Add local state for team composition and slot ordering
 - [ ] Prevent adding more than 6 Pokemon
 - [ ] Prevent blank entries in the UI before submit
-- [ ] Resolve official artwork for team slots when Pokemon details are available
-- [ ] Fallback to classic sprites in team slots when artwork is unavailable
+- [ ] Use `spriteUrl` in team slots so the builder stays compact and visually active
+- [ ] Keep `officialArtworkUrl` available in team member state for later use in analysis or detailed views
+- [ ] Fallback cleanly if a slot sprite URL is missing or broken
 - [ ] Add slot-level image loading and broken-image fallback handling
 - [ ] Surface duplicate-name errors from the backend clearly
 
 Team Builder breakdown:
 - Components needed: `TeamBuilderPage`, `TeamSlotsGrid`, `TeamSlotCard`, `EmptyTeamSlot`, `AddPokemonForm`, `TypeBadge`, `TeamValidationMessage`, `ImageLoader`
-- Data flow: add form -> local team state -> optional lookup data resolves image URL per team member -> slots grid render -> submit action passes `pokemonNames` array to analysis API
-- UX display: fixed six-slot grid, empty slots visible at all times, official artwork preferred in filled slots, clear disabled state when the team is full
+- Data flow: add form -> local team state stores `name`, `spriteUrl`, and `officialArtworkUrl` when available -> slots grid renders `spriteUrl` first -> submit action passes `pokemonNames` array to analysis API
+- UX display: fixed six-slot grid, empty slots visible at all times, animated or classic sprites keep the builder lively, clear disabled state when the team is full
 - Step-by-step sub-tasks:
 - [ ] Build six-slot grid layout
 - [ ] Add team state and slot update helpers
@@ -109,13 +111,13 @@ Team Builder breakdown:
 - [ ] Create `RecommendationsSection`
 - [ ] Create `WeaknessList`, `ResistanceList`, and `ImmunityList` subcomponents
 - [ ] Call `POST /api/team/analyze` through the frontend API layer
-- [ ] Add summary rendering for team member artwork or sprite thumbnails in the analysis header using cached lookup data or an extended backend contract
+- [ ] Add summary rendering for team member official artwork in the analysis header, with sprite fallback if artwork is missing
 - [ ] Show loading, success, empty, and backend validation failure states
 
 Team Analysis breakdown:
 - Components needed: `TeamAnalysisPage`, `AnalysisSummaryPanel`, `TypeAnalysisSection`, `RoleAnalysisSection`, `StatSummarySection`, `RecommendationsSection`, `WeaknessList`, `ResistanceList`, `ImmunityList`, `LoadingState`, `ErrorNotice`
-- Data flow: team builder state or analysis form -> API helper -> `POST /api/team/analyze` -> analysis response stored in page state -> each analysis section reads only its slice of the response
-- UX display: sectioned card layout, weaknesses shown first, resistances and immunities grouped separately, role summary and recommendations easy to scan, empty recommendations state shown explicitly
+- Data flow: team builder state or analysis form -> API helper -> `POST /api/team/analyze` -> analysis response stored in page state -> analysis header prefers cached `officialArtworkUrl`, falls back to cached `spriteUrl`, and each section reads only its slice of the response
+- UX display: sectioned card layout, polished team presentation through official artwork, weaknesses shown first, role summary and recommendations easy to scan, empty recommendations state shown explicitly
 - Step-by-step sub-tasks:
 - [ ] Add the analyze-team API client method
 - [ ] Define the frontend response model shape
@@ -132,7 +134,7 @@ Team Analysis breakdown:
 - [ ] Keep route-level state minimal and pass derived data into presentational components
 - [ ] Add optimistic UI only where it improves clarity without hiding backend validation
 - [ ] Add request cancellation or stale-response protection for repeated Pokemon searches
-- [ ] Add shared image URL resolver for official artwork first and sprite fallback second
+- [ ] Add shared image resolver that can return sprite-first or artwork-first behavior depending on the view
 - [ ] Add shared image loading and image error state handling for Pokemon artwork
 - [ ] Add reusable hooks for loading and error state if duplication appears
 
@@ -140,7 +142,8 @@ Team Analysis breakdown:
 
 - [ ] Apply responsive layout rules for mobile, tablet, and desktop
 - [ ] Use type-colored badge styles for Pokemon types
-- [ ] Use official artwork for primary Pokemon visuals and classic sprites as fallback visuals
+- [ ] Use sprites for Pokedex search previews and Team Builder slots
+- [ ] Use official artwork for detailed Pokemon cards and Team Analysis summaries
 - [ ] Add subtle card elevation, spacing, and section hierarchy for readability
 - [ ] Keep navigation and forms usable on small screens
 - [ ] Add empty-state messaging for no search result, no team members, and no recommendations
@@ -163,10 +166,10 @@ Design direction inspired by common Pokemon tools:
 
 ## Phase 8: Documentation and run instructions
 
-- [ ] Update `README.md` with frontend setup and local run commands
-- [ ] Update `docs/architecture.md` with React structure and frontend-backend data flow
-- [ ] Update `docs/assumptions.md` with frontend validation and integration assumptions
-- [ ] Update `docs/session-log.md` when frontend implementation milestones are completed
+- [x] Update `README.md` with frontend setup and local run commands
+- [x] Update `docs/architecture.md` with React structure and frontend-backend data flow
+- [x] Update `docs/assumptions.md` with frontend validation and integration assumptions
+- [x] Update `docs/session-log.md` when frontend implementation milestones are completed
 
 ## Phase 9: Full-stack verification
 
@@ -181,6 +184,8 @@ Design direction inspired by common Pokemon tools:
 - The frontend must call the backend, not PokeAPI directly.
 - The backend remains authoritative for validation and final error responses.
 - Keep frontend state management simple unless the implemented UI proves otherwise.
-- Use PokéAPI official artwork when available and fallback to classic sprite URLs when artwork is missing.
+- Support both `spriteUrl` and `officialArtworkUrl` from the backend.
+- Use sprites for quick lookup and Team Builder views, and use official artwork for polished detailed views and Team Analysis summaries.
+- Fallback from `officialArtworkUrl` to `spriteUrl` when artwork is missing.
 - Keep frontend and backend team-size validation aligned at 1 to 6 Pokemon.
 - Do not mark frontend tasks complete until the UI is actually built and tested.

@@ -20,13 +20,16 @@ Implemented now:
 - team analysis endpoint
 - type, role, stat, and recommendation logic
 - backend tests for controllers, services, and mappers
+- React frontend scaffold under `frontend/`
+- React Router setup for Pokedex, Team Builder, and Team Analysis
+- Axios API client setup and shared image utility
+- shared app shell, loading state, error notice, and image loader components
 
 Planned next:
-- React frontend under `frontend/`
-- Pokedex view
-- Team Builder view
-- Team Analysis view
-- responsive layout and frontend validation
+- full Pokedex lookup interaction
+- full Team Builder interaction and validation
+- full Team Analysis rendering from live backend responses
+- additional frontend tests beyond Phase 1 setup verification
 
 ## Scope
 
@@ -35,7 +38,7 @@ Supported scope:
 - team analysis for 1 to 6 Pokemon
 - PokeAPI-backed Pokemon data loading through the backend
 - normalized Pokemon data returned by the backend
-- frontend display of official artwork when available and sprite fallback when needed
+- frontend display of both sprite and official artwork URLs with view-specific selection
 - aggregated weaknesses, resistances, immunities, and synergy notes
 - simple role classification from base stats
 - stat summary totals and averages
@@ -89,7 +92,7 @@ The application is a small full-stack system with a strict boundary:
 2. The frontend validates basic form constraints and sends requests to the backend.
 3. The Spring Boot backend validates the request again, normalizes names, and loads Pokemon data from PokeAPI.
 4. The backend maps external responses into internal DTOs, runs analysis services, and returns structured JSON.
-5. The frontend resolves Pokemon image display from backend-provided URLs, preferring official artwork and falling back to classic sprites.
+5. The frontend resolves Pokemon image display from backend-provided URLs, choosing sprites for quick or dynamic views and official artwork for polished detail or analysis views.
 6. The frontend renders loading, success, empty, and error states for the user.
 
 Architecture flow:
@@ -197,7 +200,7 @@ docs/
   tasks.md
 ```
 
-The `frontend/` structure above is the planned target layout for the next phase. It is not scaffolded in the current repository yet.
+The `frontend/` structure above now exists in the repository as the Phase 1 scaffold.
 
 ## Backend API contract
 
@@ -233,12 +236,12 @@ Returns normalized Pokemon data:
     "specialDefense": 50,
     "speed": 90
   },
+  "officialArtworkUrl": "...",
   "spriteUrl": "..."
 }
 ```
 
-The current backend contract exposes `spriteUrl`.
-If the frontend is expected to use official artwork without calling PokeAPI directly, the backend should be extended to expose `officialArtworkUrl` alongside `spriteUrl`.
+The backend contract exposes both `officialArtworkUrl` and `spriteUrl` so the frontend can choose images without calling PokeAPI directly.
 
 ### Team analysis
 
@@ -291,6 +294,7 @@ The frontend should use a simple shell with:
 - top navigation for `Pokedex`, `Team Builder`, and `Team Analysis`
 - a centered responsive content container
 - reusable section cards and status messages
+- a footer describing backend configuration and image behavior
 
 ### Pokedex view
 
@@ -308,12 +312,14 @@ Data flow:
 - `PokemonSearchForm` triggers frontend API call
 - frontend calls `GET /api/pokemon/{name}`
 - page state stores loading, error, and Pokemon detail data
-- image state resolves `officialArtworkUrl` first and `spriteUrl` second once the backend contract includes both fields
+- quick search and lightweight profile states can render `spriteUrl`
+- detailed Pokemon card state can render `officialArtworkUrl` first and `spriteUrl` second
 - detail subcomponents render from the response DTO
 
 UX behavior:
 - show an image loading placeholder or skeleton before artwork finishes loading
-- prefer official artwork for the main Pokemon visual
+- sprites can be used for quick search and profile-style lookup moments
+- prefer official artwork for the polished detailed card view
 - fall back to classic sprite imagery if official artwork is unavailable
 - display type badges with type-specific colors
 - display stats as values and progress bars
@@ -334,7 +340,7 @@ Main components:
 Data flow:
 - user adds or removes Pokemon locally
 - page stores the team array in route-level state
-- slot image state resolves official artwork first and sprite fallback second for each filled slot
+- slot image state uses `spriteUrl` first for each filled slot and keeps `officialArtworkUrl` available in team member state
 - the six-slot grid renders current team members plus empty slots
 - submit action sends the ordered Pokemon name list to the analysis flow
 
@@ -343,7 +349,7 @@ UX behavior:
 - show a plus-style empty state for unused slots
 - prevent adding more than 6 Pokemon on the client
 - show a clear message when the team is full
-- keep artwork or sprite thumbnails and names easy to scan in grid form
+- keep sprite thumbnails and names easy to scan in grid form
 
 ### Team Analysis view
 
@@ -361,12 +367,13 @@ Main components:
 Data flow:
 - frontend submits `pokemonNames` to `POST /api/team/analyze`
 - analysis response is stored in page state
-- team summary image state resolves official artwork first and sprite fallback second using cached lookup data or additional frontend-side team detail state
+- team summary image state prefers cached `officialArtworkUrl` and falls back to cached `spriteUrl` using frontend-side team detail state
 - each section receives only the relevant slice of the response
 - errors from invalid teams or upstream failures are shown in a shared error component
 
 UX behavior:
 - put weaknesses first because they are the highest-priority result
+- use official artwork in the analysis summary when available for a cleaner presentation
 - group resistances and immunities separately for readability
 - display role labels in compact cards or chips
 - show synergy notes and recommendations as concise callouts
@@ -380,8 +387,9 @@ Recommended API helpers:
 - `getHealthStatus()`
 
 Recommended image helper behavior:
-- `resolvePokemonImage(pokemon)` should prefer `pokemon.officialArtworkUrl` once that field exists in the backend DTO
-- otherwise use `pokemon.spriteUrl`
+- `resolvePokemonImage(pokemon, mode)` should support at least `sprite-first` and `artwork-first` selection
+- `sprite-first` should prefer `pokemon.spriteUrl` and fall back to `pokemon.officialArtworkUrl`
+- `artwork-first` should prefer `pokemon.officialArtworkUrl` and fall back to `pokemon.spriteUrl`
 - image components should keep local loading and error flags so broken artwork can downgrade to the fallback source cleanly
 
 Recommended state ownership:

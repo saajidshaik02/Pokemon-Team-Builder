@@ -31,8 +31,24 @@ public class PokemonMapper {
                 mapTypes(response.types()),
                 mapAbilities(response.abilities()),
                 mapStats(response.stats()),
+                extractOfficialArtworkUrl(response),
                 response.sprites() != null ? response.sprites().front_default() : null
         );
+    }
+
+    /**
+     * Extracts the official artwork URL from the nested upstream sprite payload.
+     *
+     * @param response raw upstream Pokemon payload
+     * @return official artwork URL when present, otherwise {@code null}
+     */
+    private String extractOfficialArtworkUrl(PokeApiPokemonResponse response) {
+        if (response.sprites() == null || response.sprites().other() == null) {
+            return null;
+        }
+
+        PokeApiPokemonResponse.OfficialArtwork officialArtwork = response.sprites().other().official_artwork();
+        return officialArtwork != null ? officialArtwork.front_default() : null;
     }
 
     /**

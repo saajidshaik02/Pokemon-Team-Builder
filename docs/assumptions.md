@@ -4,7 +4,7 @@
 
 - The project is now a small full-stack application rather than a backend-only submission.
 - The Spring Boot backend is already implemented and remains the source of truth for Pokemon data and team analysis.
-- The next major phase is a React frontend that consumes the backend REST API.
+- A React frontend scaffold now exists under `frontend/` and consumes the backend REST API.
 - The goal remains useful Pokemon team analysis, not full competitive battle simulation.
 
 ## Data assumptions
@@ -12,8 +12,7 @@
 - PokeAPI is the only external data source.
 - The frontend does not call PokeAPI directly.
 - Pokemon names are normalized to lowercase by the backend before lookup.
-- Only the required Pokemon fields are used: id, name, types, abilities, base stats, and sprite URL.
-- If the frontend is expected to use official artwork through the backend only, the backend response contract must expose that artwork URL explicitly.
+- Only the required Pokemon fields are used: id, name, types, abilities, base stats, `spriteUrl`, and `officialArtworkUrl`.
 - Pokemon image handling prefers official artwork when available and falls back to classic sprite URLs when official artwork is missing.
 - If PokeAPI is unavailable, the backend returns a clear client-facing error instead of failing silently.
 
@@ -26,12 +25,15 @@
 
 ## Frontend assumptions
 
-- The frontend will be implemented with React under `frontend/`.
+- The frontend is scaffolded with React under `frontend/`.
 - Vite will be used to bootstrap the React app unless requirements change.
+- Vite is preferred because it gives a lighter React setup, faster startup, and simpler build configuration than a heavier legacy scaffold.
 - React Router will be used for the main views: Pokedex, Team Builder, and Team Analysis.
 - Axios will be used for frontend REST calls to the backend.
-- The frontend should prefer backend-provided `officialArtworkUrl` when that value is available from fetched Pokemon data.
-- The frontend should fall back to classic sprite URLs when official artwork is unavailable.
+- The frontend should consume both backend-provided `spriteUrl` and `officialArtworkUrl`.
+- The frontend should use `spriteUrl` for quick lookup views, team slots, and future dynamic or battle-style views.
+- The frontend should use `officialArtworkUrl` for polished detailed Pokemon cards and Team Analysis summaries when available.
+- The frontend should fall back from `officialArtworkUrl` to `spriteUrl` when official artwork is unavailable.
 - The frontend should show loading placeholders or skeleton states while Pokemon images are loading.
 - The frontend should handle broken or missing image URLs gracefully.
 - The frontend will use simple local state and React hooks before introducing heavier state management.
@@ -45,7 +47,8 @@
 - Pokemon stats are displayed as readable numeric rows with bars or progress-style indicators.
 - The team builder always shows 6 visible team slots.
 - Empty team slots show a plus-style action or empty placeholder state.
-- Filled team slots should show official artwork when possible and sprite fallback otherwise.
+- Filled team slots should prefer sprite imagery for compact team-building presentation.
+- Detailed Pokemon cards and Team Analysis summaries should prefer official artwork when available.
 - The team builder prevents the user from adding more than 6 Pokemon on the client.
 - The analysis view prioritizes weaknesses and recommendations visually over lower-priority sections.
 - The UI should provide visible feedback for image loading and backend error states.

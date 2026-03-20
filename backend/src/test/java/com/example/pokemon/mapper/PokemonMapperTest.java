@@ -33,7 +33,12 @@ class PokemonMapperTest {
                         new PokeApiPokemonResponse.StatSlot(85, new PokeApiPokemonResponse.NamedApiResource("special-defense")),
                         new PokeApiPokemonResponse.StatSlot(100, new PokeApiPokemonResponse.NamedApiResource("speed"))
                 ),
-                new PokeApiPokemonResponse.Sprites("https://example.test/charizard.png")
+                new PokeApiPokemonResponse.Sprites(
+                        "https://example.test/charizard.png",
+                        new PokeApiPokemonResponse.OtherSprites(
+                                new PokeApiPokemonResponse.OfficialArtwork("https://example.test/charizard-artwork.png")
+                        )
+                )
         );
 
         PokemonDetailsResponse mapped = pokemonMapper.toPokemonResponse(response);
@@ -44,6 +49,7 @@ class PokemonMapperTest {
         assertEquals(List.of("blaze", "solar-power"), mapped.abilities());
         assertEquals(78, mapped.stats().hp());
         assertEquals(109, mapped.stats().specialAttack());
+        assertEquals("https://example.test/charizard-artwork.png", mapped.officialArtworkUrl());
         assertEquals("https://example.test/charizard.png", mapped.spriteUrl());
     }
 }

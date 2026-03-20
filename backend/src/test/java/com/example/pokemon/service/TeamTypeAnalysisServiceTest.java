@@ -49,6 +49,7 @@ class TeamTypeAnalysisServiceTest {
                 types,
                 List.of(),
                 new PokemonStatsResponse(50, 50, 50, 50, 50, 50),
+                "https://example.test/" + name + "-artwork.png",
                 "https://example.test/" + name + ".png"
         );
     }

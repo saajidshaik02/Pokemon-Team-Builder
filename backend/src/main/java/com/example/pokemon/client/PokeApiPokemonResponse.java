@@ -60,9 +60,28 @@ public record PokeApiPokemonResponse(
      * Raw PokeAPI sprite payload.
      *
      * @param front_default default front sprite URL
+     * @param other nested alternate-art payloads
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Sprites(String front_default) {
+    public record Sprites(String front_default, OtherSprites other) {
+    }
+
+    /**
+     * Nested PokeAPI sprite collections.
+     *
+     * @param official_artwork official artwork payload
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record OtherSprites(OfficialArtwork official_artwork) {
+    }
+
+    /**
+     * Official artwork sprite payload.
+     *
+     * @param front_default official artwork URL
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record OfficialArtwork(String front_default) {
     }
 
     /**

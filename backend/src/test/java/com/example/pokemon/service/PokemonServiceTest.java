@@ -39,7 +39,12 @@ class PokemonServiceTest {
                 List.of(),
                 List.of(),
                 List.of(),
-                new PokeApiPokemonResponse.Sprites("https://example.test/pikachu.png")
+                new PokeApiPokemonResponse.Sprites(
+                        "https://example.test/pikachu.png",
+                        new PokeApiPokemonResponse.OtherSprites(
+                                new PokeApiPokemonResponse.OfficialArtwork("https://example.test/pikachu-artwork.png")
+                        )
+                )
         );
         PokemonDetailsResponse pokemonResponse = new PokemonDetailsResponse(
                 25,
@@ -47,6 +52,7 @@ class PokemonServiceTest {
                 List.of("electric"),
                 List.of("static"),
                 new PokemonStatsResponse(35, 55, 40, 50, 50, 90),
+                "https://example.test/pikachu-artwork.png",
                 "https://example.test/pikachu.png"
         );
 
