@@ -2,8 +2,9 @@ package com.example.pokemon.service;
 
 import com.example.pokemon.client.PokeApiClient;
 import com.example.pokemon.client.PokeApiPokemonResponse;
-import com.example.pokemon.dto.PokemonResponse;
+import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.dto.PokemonStatsResponse;
+import com.example.pokemon.exception.PokemonNotFoundException;
 import com.example.pokemon.mapper.PokemonMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class PokemonServiceTest {
                 List.of(),
                 new PokeApiPokemonResponse.Sprites("https://example.test/pikachu.png")
         );
-        PokemonResponse pokemonResponse = new PokemonResponse(
+        PokemonDetailsResponse pokemonResponse = new PokemonDetailsResponse(
                 25,
                 "pikachu",
                 List.of("electric"),
@@ -52,7 +53,7 @@ class PokemonServiceTest {
         given(pokeApiClient.getPokemonByName("pikachu")).willReturn(clientResponse);
         given(pokemonMapper.toPokemonResponse(clientResponse)).willReturn(pokemonResponse);
 
-        PokemonResponse result = pokemonService.getPokemonByName("  Pikachu  ");
+        PokemonDetailsResponse result = pokemonService.getPokemonByName("  Pikachu  ");
 
         verify(pokeApiClient).getPokemonByName("pikachu");
         assertEquals("pikachu", result.name());
@@ -65,6 +66,29 @@ class PokemonServiceTest {
                 () -> pokemonService.getPokemonByName("   ")
         );
 
-        assertEquals("Pokemon name must not be blank.", exception.getMessage());
+        assertEquals(PokemonService.BLANK_POKEMON_NAME_MESSAGE, exception.getMessage());
+    }
+
+    @Test
+    void shouldRejectNullPokemonName() {
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> pokemonService.getPokemonByName(null)
+        );
+
+        assertEquals(PokemonService.BLANK_POKEMON_NAME_MESSAGE, exception.getMessage());
+    }
+
+    @Test
+    void shouldPropagatePokemonNotFound() {
+        given(pokeApiClient.getPokemonByName("missingno"))
+                .willThrow(new PokemonNotFoundException("missingno"));
+
+        PokemonNotFoundException exception = assertThrows(
+                PokemonNotFoundException.class,
+                () -> pokemonService.getPokemonByName("missingno")
+        );
+
+        assertEquals("Pokemon 'missingno' was not found. Check the name and try again.", exception.getMessage());
     }
 }

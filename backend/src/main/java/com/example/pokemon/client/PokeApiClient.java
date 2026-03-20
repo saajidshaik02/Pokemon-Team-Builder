@@ -25,7 +25,7 @@ public class PokeApiClient {
                     .body(PokeApiPokemonResponse.class);
 
             if (response == null) {
-                throw new ExternalServiceException("PokeAPI returned an empty response.");
+                throw new ExternalServiceException("Pokemon data could not be loaded from PokeAPI.");
             }
 
             return response;
@@ -33,9 +33,9 @@ public class PokeApiClient {
             if (exception.getStatusCode().value() == 404) {
                 throw new PokemonNotFoundException(normalizedName);
             }
-            throw new ExternalServiceException("Failed to load Pokemon data from PokeAPI.", exception);
+            throw new ExternalServiceException("Pokemon data could not be loaded from PokeAPI.", exception);
         } catch (ResourceAccessException exception) {
-            throw new ExternalServiceException("PokeAPI is currently unavailable.", exception);
+            throw new ExternalServiceException("PokeAPI is currently unavailable. Please try again later.", exception);
         }
     }
 }

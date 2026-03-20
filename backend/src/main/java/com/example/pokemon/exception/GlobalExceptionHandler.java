@@ -1,39 +1,50 @@
 package com.example.pokemon.exception;
 
-import com.example.pokemon.dto.ApiErrorResponse;
+import com.example.pokemon.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.Instant;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(PokemonNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handlePokemonNotFound(PokemonNotFoundException exception) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
+    public ResponseEntity<ErrorResponse> handlePokemonNotFound(PokemonNotFoundException exception, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException exception) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage());
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException exception, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, exception.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(ExternalServiceException.class)
-    public ResponseEntity<ApiErrorResponse> handleExternalService(ExternalServiceException exception) {
-        return buildErrorResponse(HttpStatus.BAD_GATEWAY, exception.getMessage());
+    public ResponseEntity<ErrorResponse> handleExternalService(ExternalServiceException exception, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.BAD_GATEWAY, exception.getMessage(), request.getRequestURI());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidJson(HttpMessageNotReadableException exception, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Request body must be valid JSON.", request.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponse> handleUnexpected(Exception exception) {
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
+    public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error. Please try again later.", request.getRequestURI());
     }
 
-    private ResponseEntity<ApiErrorResponse> buildErrorResponse(HttpStatus status, String message) {
-        ApiErrorResponse response = new ApiErrorResponse(
+    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String message, String path) {
+        ErrorResponse response = new ErrorResponse(
                 status.value(),
                 status.getReasonPhrase(),
-                message
+                message,
+                path,
+                Instant.now()
         );
         return ResponseEntity.status(status).body(response);
     }

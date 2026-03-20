@@ -1,6 +1,6 @@
 package com.example.pokemon.controller;
 
-import com.example.pokemon.dto.PokemonResponse;
+import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.dto.PokemonStatsResponse;
 import com.example.pokemon.exception.GlobalExceptionHandler;
 import com.example.pokemon.exception.PokemonNotFoundException;
@@ -33,7 +33,7 @@ class PokemonControllerTest {
 
     @Test
     void shouldReturnNormalizedPokemonResponse() throws Exception {
-        PokemonResponse pokemonResponse = new PokemonResponse(
+        PokemonDetailsResponse pokemonResponse = new PokemonDetailsResponse(
                 25,
                 "pikachu",
                 List.of("electric"),
@@ -64,6 +64,7 @@ class PokemonControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.message").value("Pokemon 'missingno' was not found."));
+                .andExpect(jsonPath("$.message").value("Pokemon 'missingno' was not found. Check the name and try again."))
+                .andExpect(jsonPath("$.path").value("/api/pokemon/missingno"));
     }
 }

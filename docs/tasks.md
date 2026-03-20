@@ -1,7 +1,7 @@
 # Tasks
 
 ## Current goal
-Build a backend-only Pokémon team analysis tool using Spring Boot.
+Build a backend-only Pokemon team analysis tool using Spring Boot.
 
 ## Phase 1: Project setup
 - [x] Create Spring Boot project
@@ -9,41 +9,41 @@ Build a backend-only Pokémon team analysis tool using Spring Boot.
 - [x] Add `/api/health` endpoint
 - [x] Confirm project runs locally
 
-## Phase 2: Pokémon lookup
+## Phase 2: Pokemon lookup
 - [x] Add PokéAPI client
 - [x] Add `GET /api/pokemon/{name}` endpoint
-- [x] Normalize Pokémon response into internal DTO
-- [x] Handle invalid Pokémon names cleanly
+- [x] Normalize Pokemon response into internal DTO
+- [x] Handle invalid Pokemon names cleanly
 
 ## Phase 3: Team analysis
-- [ ] Add `POST /api/team/analyze` endpoint
-- [ ] Validate team size is between 1 and 6
-- [ ] Fetch all Pokémon in submitted team
-- [ ] Aggregate type weaknesses
-- [ ] Aggregate resistances and immunities
-- [ ] Return structured analysis response
+- [x] Add `POST /api/team/analyze` endpoint
+- [x] Validate team size is between 1 and 6
+- [x] Fetch all Pokemon in submitted team
+- [x] Aggregate type weaknesses
+- [x] Aggregate resistances and immunities
+- [x] Return structured analysis response
 
 ## Phase 4: Role and stat analysis
-- [ ] Add stat summary logic
-- [ ] Add simple role classification
-- [ ] Detect role imbalance
-- [ ] Add recommendation generation
+- [x] Add stat summary logic
+- [x] Add simple role classification
+- [x] Detect role imbalance
+- [x] Add recommendation generation
 
 ## Phase 5: Error handling and polish
-- [ ] Add global exception handling
-- [ ] Improve response messages
-- [ ] Clean up DTO naming
-- [ ] Refactor duplicated logic
+- [x] Add global exception handling
+- [x] Improve response messages
+- [x] Clean up DTO naming
+- [x] Refactor duplicated logic
 
 ## Phase 6: Testing
-- [ ] Add tests for Pokémon lookup service
-- [ ] Add tests for team validation
-- [ ] Add tests for type analysis logic
-- [ ] Add tests for recommendation logic
+- [x] Add tests for Pokemon lookup service
+- [x] Add tests for team validation
+- [x] Add tests for type analysis logic
+- [x] Add tests for recommendation logic
 
 ## Phase 7: Submission prep
-- [ ] Review architecture alignment
-- [ ] Update README
-- [ ] Update assumptions
-- [ ] Update session log
-- [ ] Final manual endpoint testing
+- [x] Review architecture alignment
+- [x] Update README
+- [x] Update assumptions
+- [x] Update session log
+- [x] Final manual endpoint testing

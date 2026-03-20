@@ -1,12 +1,12 @@
 package com.example.pokemon.service;
 
-import com.example.pokemon.dto.HealthResponse;
+import com.example.pokemon.dto.HealthStatusResponse;
 import org.springframework.stereotype.Service;
 
 @Service
 public class HealthService {
 
-    public HealthResponse getHealth() {
-        return new HealthResponse("ok");
+    public HealthStatusResponse getHealth() {
+        return new HealthStatusResponse("ok");
     }
 }

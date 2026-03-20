@@ -1,7 +1,7 @@
 package com.example.pokemon.service;
 
 import com.example.pokemon.client.PokeApiClient;
-import com.example.pokemon.dto.PokemonResponse;
+import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.mapper.PokemonMapper;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +9,8 @@ import java.util.Locale;
 
 @Service
 public class PokemonService {
+
+    static final String BLANK_POKEMON_NAME_MESSAGE = "Pokemon name must not be blank.";
 
     private final PokeApiClient pokeApiClient;
     private final PokemonMapper pokemonMapper;
@@ -18,22 +20,22 @@ public class PokemonService {
         this.pokemonMapper = pokemonMapper;
     }
 
-    public PokemonResponse getPokemonByName(String name) {
-        String normalizedName = normalizeName(name);
+    public PokemonDetailsResponse getPokemonByName(String name) {
+        String normalizedName = normalizePokemonName(name);
         return pokemonMapper.toPokemonResponse(
                 pokeApiClient.getPokemonByName(normalizedName)
         );
     }
 
-    private String normalizeName(String name) {
+    String normalizePokemonName(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("Pokemon name must not be blank.");
+            throw new IllegalArgumentException(BLANK_POKEMON_NAME_MESSAGE);
         }
 
         String normalizedName = name.trim().toLowerCase(Locale.ROOT);
 
         if (normalizedName.isEmpty()) {
-            throw new IllegalArgumentException("Pokemon name must not be blank.");
+            throw new IllegalArgumentException(BLANK_POKEMON_NAME_MESSAGE);
         }
 
         return normalizedName;

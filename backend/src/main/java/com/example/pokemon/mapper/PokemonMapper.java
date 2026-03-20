@@ -1,7 +1,7 @@
 package com.example.pokemon.mapper;
 
 import com.example.pokemon.client.PokeApiPokemonResponse;
-import com.example.pokemon.dto.PokemonResponse;
+import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.dto.PokemonStatsResponse;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +12,8 @@ import java.util.Map;
 @Component
 public class PokemonMapper {
 
-    public PokemonResponse toPokemonResponse(PokeApiPokemonResponse response) {
-        return new PokemonResponse(
+    public PokemonDetailsResponse toPokemonResponse(PokeApiPokemonResponse response) {
+        return new PokemonDetailsResponse(
                 response.id(),
                 response.name(),
                 mapTypes(response.types()),

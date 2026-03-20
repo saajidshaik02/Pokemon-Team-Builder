@@ -1,6 +1,6 @@
 package com.example.pokemon.controller;
 
-import com.example.pokemon.dto.HealthResponse;
+import com.example.pokemon.dto.HealthStatusResponse;
 import com.example.pokemon.service.HealthService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ public class HealthController {
     }
 
     @GetMapping
-    public HealthResponse getHealth() {
+    public HealthStatusResponse getHealth() {
         return healthService.getHealth();
     }
 }

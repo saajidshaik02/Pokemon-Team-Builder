@@ -1,4 +1,9 @@
+com\example\pokemon\service\TeamAnalysisServiceTest.class
 com\example\pokemon\controller\HealthControllerTest.class
 com\example\pokemon\mapper\PokemonMapperTest.class
+com\example\pokemon\service\TeamRoleAnalysisServiceTest.class
+com\example\pokemon\service\TeamTypeAnalysisServiceTest.class
+com\example\pokemon\controller\TeamControllerTest.class
 com\example\pokemon\service\PokemonServiceTest.class
 com\example\pokemon\controller\PokemonControllerTest.class
+com\example\pokemon\service\TeamStatSummaryServiceTest.class

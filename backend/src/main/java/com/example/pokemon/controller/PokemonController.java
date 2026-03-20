@@ -1,6 +1,6 @@
 package com.example.pokemon.controller;
 
-import com.example.pokemon.dto.PokemonResponse;
+import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.service.PokemonService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +18,7 @@ public class PokemonController {
     }
 
     @GetMapping("/{name}")
-    public PokemonResponse getPokemonByName(@PathVariable String name) {
+    public PokemonDetailsResponse getPokemonByName(@PathVariable String name) {
         return pokemonService.getPokemonByName(name);
     }
 }

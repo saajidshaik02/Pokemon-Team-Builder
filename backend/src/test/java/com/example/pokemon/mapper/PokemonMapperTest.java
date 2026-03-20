@@ -1,7 +1,7 @@
 package com.example.pokemon.mapper;
 
 import com.example.pokemon.client.PokeApiPokemonResponse;
-import com.example.pokemon.dto.PokemonResponse;
+import com.example.pokemon.dto.PokemonDetailsResponse;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,7 +36,7 @@ class PokemonMapperTest {
                 new PokeApiPokemonResponse.Sprites("https://example.test/charizard.png")
         );
 
-        PokemonResponse mapped = pokemonMapper.toPokemonResponse(response);
+        PokemonDetailsResponse mapped = pokemonMapper.toPokemonResponse(response);
 
         assertEquals(6, mapped.id());
         assertEquals("charizard", mapped.name());
