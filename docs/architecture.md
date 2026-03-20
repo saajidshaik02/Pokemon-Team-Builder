@@ -1,106 +1,159 @@
 # Architecture
 
-# Architecture
-
 ## Product goal
-Create a Pokémon team analysis tool that helps users build and evaluate a team of Pokémon.
 
-The tool should allow a user to:
-- input up to 6 Pokémon
-- view each Pokémon’s key information
-- analyze the team’s type coverage and shared weaknesses
-- evaluate team balance using simple stat and role heuristics
-- receive simple recommendations for improvement
+Create a Pokemon team analysis tool that helps users:
+- look up a single Pokemon by name
+- build and analyze a team of up to 6 Pokemon
+- understand shared weaknesses, resistances, and immunities
+- review simple role and stat balance
+- receive deterministic recommendations for improving team balance
 
-This project focuses on clear reasoning and useful analysis, not full competitive battle simulation.
+The project is intentionally lightweight. It focuses on explainable analysis rather than full competitive battle simulation.
+
+## Current project status
+
+Implemented now:
+- Spring Boot backend API under `backend/`
+- health endpoint
+- single Pokemon lookup endpoint
+- team analysis endpoint
+- type, role, stat, and recommendation logic
+- backend tests for controllers, services, and mappers
+
+Planned next:
+- React frontend under `frontend/`
+- Pokedex view
+- Team Builder view
+- Team Analysis view
+- responsive layout and frontend validation
 
 ## Scope
-This project will support:
-- Pokémon lookup by name
-- building a team of up to 6 Pokémon
-- fetching Pokémon data from PokéAPI
-- displaying normalized Pokémon information
-- team weakness and resistance analysis
-- basic offensive or defensive coverage insights
-- simple role classification
-- recommendation generation based on team weaknesses or imbalance
 
-This project will not support:
+Supported scope:
+- Pokemon lookup by name
+- team analysis for 1 to 6 Pokemon
+- PokeAPI-backed Pokemon data loading through the backend
+- normalized Pokemon data returned by the backend
+- frontend display of official artwork when available and sprite fallback when needed
+- aggregated weaknesses, resistances, immunities, and synergy notes
+- simple role classification from base stats
+- stat summary totals and averages
+- deterministic recommendations
+- frontend consumption of backend REST endpoints
+
+Out of scope:
 - battle simulation
 - movesets
-- EV/IV calculations
+- EVs and IVs
 - held items
-- abilities-based battle effects
+- ability mechanics in battle
 - natures
 - breeding or progression systems
-- user accounts or persistence
+- authentication
+- persistence or database storage
 
 ## Tech stack
-- Backend: Java 21
-- Framework: Spring Boot
-- Build tool: Maven
-- External data source: PokéAPI
-- Testing: JUnit / Spring Boot Test
 
-No database will be used in the first version.
-No frontend web app is required in the first version.
-The application will expose REST endpoints and can be tested using Postman, curl, Swagger UI, or simple request payloads.
+Backend:
+- Java 21
+- Spring Boot
+- Maven
+- PokeAPI as the external data source
+- JUnit and Spring Boot Test
+
+Frontend:
+- React
+- Vite
+- React Router
+- Axios
+- CSS modules or scoped CSS files with shared design tokens
+
+## Design inspiration
+
+The frontend should take cues from a few widely used Pokemon tools while staying simpler than them:
+- Pokemon Showdown teambuilder: good reference for fixed team slots, quick add or remove workflows, and analysis-focused structure
+- Pokemon Database Pokedex pages: good reference for searchable Pokemon detail views, readable stat presentation, and type labels
+- Serebii Pokedex pages: good reference for grouping sprite, abilities, typing, and stat information in compact sections
+
+The goal is not to copy those interfaces directly. The goal is to reuse the strongest patterns:
+- searchable single-Pokemon detail flow
+- visible six-slot team builder grid
+- sectioned analysis output with clear visual hierarchy
 
 ## High-level system design
-The system will act as a backend analysis service.
 
-Flow:
-1. User sends Pokémon names to the backend
-2. Backend fetches Pokémon data from PokéAPI
-3. Backend normalizes the external API response into internal models
-4. Backend analyzes the full team
-5. Backend returns structured analysis and recommendations
+The application is a small full-stack system with a strict boundary:
+
+1. The React frontend accepts user input and manages view state.
+2. The frontend validates basic form constraints and sends requests to the backend.
+3. The Spring Boot backend validates the request again, normalizes names, and loads Pokemon data from PokeAPI.
+4. The backend maps external responses into internal DTOs, runs analysis services, and returns structured JSON.
+5. The frontend resolves Pokemon image display from backend-provided URLs, preferring official artwork and falling back to classic sprites.
+6. The frontend renders loading, success, empty, and error states for the user.
 
 Architecture flow:
-Client input -> Controller -> Service -> External API Client -> Mapper -> Analysis Service -> Response DTO
+
+`React UI -> frontend API layer -> Spring controller -> service -> PokeAPI client -> mapper -> analysis services -> response DTO -> React UI`
 
 ## Main responsibilities by layer
 
+### Frontend layer
+
+Responsible for:
+- route-level views
+- form input and client-side validation
+- loading and error states
+- Pokemon image loading and fallback state handling
+- rendering Pokemon details and team analysis results
+- maintaining team composition state
+- calling backend endpoints only
+
 ### Controller layer
+
 Responsible for:
 - receiving HTTP requests
-- validating request payloads
+- delegating to services
 - returning structured API responses
-- exposing endpoints for lookup and team analysis
 
 ### Service layer
-Responsible for:
-- coordinating Pokémon lookup
-- orchestrating team analysis
-- applying business logic
-- generating recommendations
 
-### External API client layer
 Responsible for:
-- calling PokéAPI
-- handling API errors and timeouts
-- returning raw external data safely to the service or mapper layer
+- Pokemon lookup orchestration
+- request validation and normalization
+- team analysis orchestration
+- deterministic recommendation generation
+
+### Client layer
+
+Responsible for:
+- calling PokeAPI
+- handling upstream API failures cleanly
+- returning raw external models only inside the backend
 
 ### Mapper layer
-Responsible for:
-- converting PokéAPI responses into internal DTOs/models
-- ensuring only required fields are exposed internally
 
-### Analysis layer
 Responsible for:
-- type weakness analysis
-- resistance and immunity aggregation
-- stat summary calculations
-- role classification
-- team recommendation rules
+- converting PokeAPI responses into normalized internal DTOs
+
+### Model layer
+
+Responsible for:
+- internal analysis support structures such as the type-effectiveness chart
 
 ### DTO layer
-Responsible for:
-- request payloads
-- response payloads
-- keeping API contracts explicit and stable
 
-## Suggested package structure
+Responsible for:
+- explicit request and response contracts between backend and frontend
+
+### Exception layer
+
+Responsible for:
+- consistent JSON error payloads for invalid requests, missing Pokemon, upstream failures, and unexpected errors
+
+## Repository structure
+
+```text
 backend/
   src/main/java/com/example/pokemon/
     controller/
@@ -112,79 +165,61 @@ backend/
     exception/
     config/
     PokemonApplication.java
+  src/main/resources/
+  src/test/java/com/example/pokemon/
 
-## Core domain concepts
+frontend/
+  src/
+    api/
+      pokemonApi.js
+      teamApi.js
+    components/
+      common/
+      pokemon/
+      team/
+      analysis/
+    hooks/
+    layouts/
+    pages/
+      PokedexPage.jsx
+      TeamBuilderPage.jsx
+      TeamAnalysisPage.jsx
+    styles/
+      tokens.css
+      globals.css
+    App.jsx
+    main.jsx
 
-### Pokémon
-A normalized Pokémon object should include:
-- id
-- name
-- types
-- abilities
-- base stats
-- sprite URL
+docs/
+  architecture.md
+  assumptions.md
+  session-log.md
+  tasks.md
+```
 
-### Team
-A team is a collection of up to 6 Pokémon.
+The `frontend/` structure above is the planned target layout for the next phase. It is not scaffolded in the current repository yet.
 
-### Type analysis
-The system should evaluate:
-- which attacking types the team is weak to
-- which attacking types the team resists well
-- whether multiple team members share the same weakness
-- whether the team has useful resistances or immunities
-
-### Role analysis
-The system should classify Pokémon using simple heuristics such as:
-- physical attacker
-- special attacker
-- defensive wall
-- fast attacker
-- bulky support
-- mixed attacker
-
-These are heuristic labels only, not competitive-grade classifications.
-
-### Recommendations
-Recommendations should be generated from simple deterministic rules, for example:
-- too many shared weaknesses
-- lack of speed
-- lack of defensive stability
-- overly one-dimensional offense
-- too many similar roles
-
-## External data source
-Primary source:
-- PokéAPI
-
-Expected Pokémon fields to use:
-- name
-- id
-- types
-- abilities
-- stats
-- sprites
-
-Only fields needed for this assignment should be mapped into internal models.
-
-## Initial API design
+## Backend API contract
 
 ### Health check
-GET /api/health
 
-Response:
+`GET /api/health`
+
+Returns backend availability:
+
+```json
 {
   "status": "ok"
 }
+```
 
-### Search Pokémon by name
-GET /api/pokemon/{name}
+### Pokemon lookup
 
-Purpose:
-- fetch a single Pokémon by name
-- return normalized Pokémon information
+`GET /api/pokemon/{name}`
 
-Example response:
+Returns normalized Pokemon data:
+
+```json
 {
   "id": 25,
   "name": "pikachu",
@@ -200,145 +235,192 @@ Example response:
   },
   "spriteUrl": "..."
 }
+```
 
-### Analyze team
-POST /api/team/analyze
+The current backend contract exposes `spriteUrl`.
+If the frontend is expected to use official artwork without calling PokeAPI directly, the backend should be extended to expose `officialArtworkUrl` alongside `spriteUrl`.
 
-Example request:
+### Team analysis
+
+`POST /api/team/analyze`
+
+Request:
+
+```json
 {
   "pokemonNames": ["pikachu", "charizard", "blastoise"]
 }
+```
 
-Example response:
+Response sections:
+- `team`
+- `typeAnalysis`
+- `roleAnalysis`
+- `statSummary`
+- `recommendations`
+
+## Validation and error handling
+
+Backend validation rules:
+- Pokemon names must not be blank
+- team size must be between 1 and 6
+- duplicate Pokemon are currently rejected
+- invalid Pokemon names return `404`
+- malformed JSON returns `400`
+- upstream PokeAPI failures return `502`
+
+Error payload shape:
+
+```json
 {
-  "team": [
-    {
-      "name": "pikachu",
-      "types": ["electric"]
-    },
-    {
-      "name": "charizard",
-      "types": ["fire", "flying"]
-    },
-    {
-      "name": "blastoise",
-      "types": ["water"]
-    }
-  ],
-  "typeAnalysis": {
-    "majorWeaknesses": ["rock"],
-    "coveredThreats": ["grass", "steel"],
-    "sharedWeaknessCounts": {
-      "rock": 2
-    }
-  },
-  "roleAnalysis": {
-    "roles": {
-      "pikachu": "fast attacker",
-      "charizard": "special attacker",
-      "blastoise": "defensive wall"
-    },
-    "summary": [
-      "team has some speed",
-      "team has limited defensive depth"
-    ]
-  },
-  "recommendations": [
-    "Consider adding a ground or fighting answer to improve rock matchup",
-    "Consider adding another bulky Pokémon for defensive balance"
-  ]
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Pokemon team must contain between 1 and 6 Pokemon.",
+  "path": "/api/team/analyze",
+  "timestamp": "2026-03-21T00:00:00Z"
 }
+```
 
-## Analysis rules
+The frontend should consume this error format directly and surface the `message` value in user-facing error states.
 
-### Type weakness analysis
-The first version should use simple type-effectiveness rules:
-- identify whether each Pokémon is weak, resistant, immune, or neutral to each attacking type
-- aggregate results across the team
-- flag major weaknesses when multiple team members are weak to the same attacking type
+## Frontend UI structure
 
-Suggested simple rules:
-- if 3 or more Pokémon are weak to one type, mark as a major weakness
-- if 2 Pokémon are weak and no team member resists that type, mark as a concern
-- if several Pokémon resist or are immune to a type, mark it as a team strength
+### App shell
 
-### Role classification rules
-The first version should use stat-based heuristics only.
+The frontend should use a simple shell with:
+- top navigation for `Pokedex`, `Team Builder`, and `Team Analysis`
+- a centered responsive content container
+- reusable section cards and status messages
 
-Example ideas:
-- physical attacker: Attack significantly higher than Special Attack
-- special attacker: Special Attack significantly higher than Attack
-- fast attacker: Speed above a threshold
-- defensive wall: high combined HP, Defense, and Special Defense
-- mixed attacker: Attack and Special Attack both reasonably high
-- bulky support: moderate defenses and lower offensive emphasis
+### Pokedex view
 
-These do not need to be perfect. They need to be understandable and consistent.
+Main components:
+- `PokedexPage`
+- `PokemonSearchForm`
+- `PokemonCard`
+- `PokemonAbilitiesList`
+- `PokemonStatsPanel`
+- `TypeBadge`
+- `PokemonImage`
 
-### Recommendation rules
-Recommendations should be deterministic and explainable.
+Data flow:
+- user enters a Pokemon name
+- `PokemonSearchForm` triggers frontend API call
+- frontend calls `GET /api/pokemon/{name}`
+- page state stores loading, error, and Pokemon detail data
+- image state resolves `officialArtworkUrl` first and `spriteUrl` second once the backend contract includes both fields
+- detail subcomponents render from the response DTO
 
-Examples:
-- too many Pokémon weak to electric
-- too many physical attackers and no special attacker
-- no fast Pokémon
-- weak defensive balance
-- too much role overlap
+UX behavior:
+- show an image loading placeholder or skeleton before artwork finishes loading
+- prefer official artwork for the main Pokemon visual
+- fall back to classic sprite imagery if official artwork is unavailable
+- display type badges with type-specific colors
+- display stats as values and progress bars
+- show abilities in a simple readable list
+- surface invalid-name errors near the search field
 
-## Validation rules
-- team must contain between 1 and 6 Pokémon
-- Pokémon names should be normalized to lowercase before lookup
-- duplicate Pokémon may be rejected in the first version
-- invalid Pokémon names should return a clear error response
+### Team Builder view
 
-## Error handling
-The system should provide clear error responses for:
-- invalid Pokémon names
-- empty team input
-- too many Pokémon submitted
-- failures from PokéAPI
-- unexpected internal server errors
+Main components:
+- `TeamBuilderPage`
+- `TeamSlotsGrid`
+- `TeamSlotCard`
+- `EmptyTeamSlot`
+- `AddPokemonForm`
+- `PokemonImage`
+- `TeamValidationMessage`
 
-## Non-functional goals
-- code should be modular and maintainable
-- logic should be easy to explain in README
-- endpoints should be easy to test manually
-- external API data should be normalized before use
-- business rules should stay simple and explicit
+Data flow:
+- user adds or removes Pokemon locally
+- page stores the team array in route-level state
+- slot image state resolves official artwork first and sprite fallback second for each filled slot
+- the six-slot grid renders current team members plus empty slots
+- submit action sends the ordered Pokemon name list to the analysis flow
 
-## Build priorities
+UX behavior:
+- always show exactly 6 slots
+- show a plus-style empty state for unused slots
+- prevent adding more than 6 Pokemon on the client
+- show a clear message when the team is full
+- keep artwork or sprite thumbnails and names easy to scan in grid form
 
-### Phase 1
-- project scaffolding
-- health endpoint
-- single Pokémon lookup endpoint
-- PokéAPI client setup
+### Team Analysis view
 
-### Phase 2
-- team analysis endpoint
-- type weakness aggregation
-- normalized response DTOs
+Main components:
+- `TeamAnalysisPage`
+- `AnalysisSummaryPanel`
+- `TypeAnalysisSection`
+- `RoleAnalysisSection`
+- `StatSummarySection`
+- `RecommendationsSection`
+- `WeaknessList`
+- `ResistanceList`
+- `ImmunityList`
 
-### Phase 3
-- role classification
-- recommendation generation
-- tests
-- README cleanup
+Data flow:
+- frontend submits `pokemonNames` to `POST /api/team/analyze`
+- analysis response is stored in page state
+- team summary image state resolves official artwork first and sprite fallback second using cached lookup data or additional frontend-side team detail state
+- each section receives only the relevant slice of the response
+- errors from invalid teams or upstream failures are shown in a shared error component
+
+UX behavior:
+- put weaknesses first because they are the highest-priority result
+- group resistances and immunities separately for readability
+- display role labels in compact cards or chips
+- show synergy notes and recommendations as concise callouts
+- show an explicit empty state when recommendations are absent
+
+## Frontend-backend interaction model
+
+Recommended API helpers:
+- `getPokemonByName(name)`
+- `analyzeTeam(pokemonNames)`
+- `getHealthStatus()`
+
+Recommended image helper behavior:
+- `resolvePokemonImage(pokemon)` should prefer `pokemon.officialArtworkUrl` once that field exists in the backend DTO
+- otherwise use `pokemon.spriteUrl`
+- image components should keep local loading and error flags so broken artwork can downgrade to the fallback source cleanly
+
+Recommended state ownership:
+- `PokedexPage`: search term, Pokemon result, loading, error, image loading state
+- `TeamBuilderPage`: team array, validation message, slot image loading state
+- `TeamAnalysisPage`: submitted team, analysis result, loading, error, summary image loading state
+
+Recommended shared UI primitives:
+- `TypeBadge`
+- `PokemonImage`
+- `LoadingState`
+- `ErrorNotice`
+- `SectionCard`
+
+## Styling guidance
+
+Use simple CSS with shared design tokens first. Material UI is optional, but plain CSS is enough for this project if the component structure stays clean.
+
+Suggested visual rules:
+- use colored type badges for quick scanning
+- use card sections with consistent padding and subtle shadow
+- use official artwork for primary visuals and classic sprites as fallback visuals
+- use a 2-column layout on desktop and a single-column stack on mobile
+- keep interactive controls large enough for touch devices
+- keep contrast high and labels explicit
 
 ## Key design decisions
-- backend only for version 1
-- no database
-- no authentication
-- no persistence
-- no battle simulation
-- simple rules are preferred over complex mechanics
-- internal DTOs will be used instead of exposing raw PokéAPI responses
+
+- The backend remains the only system that talks to PokeAPI.
+- The frontend stays presentation-focused and should not duplicate backend business logic.
+- API contracts remain DTO-driven and explicit.
+- Analysis logic remains deterministic and explainable.
+- No database, authentication, or persistence should be added unless requirements change.
 
 ## Success criteria
-A successful first version should:
-- accept Pokémon input
-- fetch valid Pokémon data reliably
-- return useful team analysis
-- explain weaknesses and role balance clearly
-- produce simple but sensible recommendations
+
+A successful next iteration should:
+- keep the existing backend behavior stable
+- add a responsive React frontend that consumes the live backend
+- allow users to look up a Pokemon and analyze a team without using Postman
+- display artwork or sprite loading states, fallback image handling, and backend errors clearly
 - remain small, readable, and easy to extend

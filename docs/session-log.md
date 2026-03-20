@@ -148,3 +148,106 @@ Complete final polish, documentation, architecture review, and submission checks
 - Automated tests passed with 18 total tests
 - Final manual endpoint testing confirmed health, Pokemon lookup, and team analysis were all working
 - Mockito still emits a non-blocking dynamic agent warning during tests
+
+## Session 6
+### Goal
+Review the completed backend and realign the project documentation for the new frontend phase.
+
+### Completed
+- Reviewed the implemented backend controllers, services, DTOs, and exception handling to confirm the live API contract
+- Updated `AGENTS.md` so repository rules now allow and define frontend work
+- Updated `docs/architecture.md` from backend-only scope to a full-stack architecture plan
+- Updated `docs/assumptions.md` to reflect frontend integration and current backend validation behavior
+- Reworked `docs/tasks.md` so completed backend work and pending frontend work are separated clearly
+- Updated `README.md` with the current backend status, frontend plan, and corrected backend run instructions
+
+### Decisions made
+- Treat the backend as functionally complete and stable enough to build the frontend against now
+- Keep the backend as the only system that talks to PokeAPI
+- Keep frontend validation lightweight and UX-focused while leaving final validation to the backend
+- Document the frontend as planned rather than implemented to avoid overstating repository status
+
+### Next steps
+- Scaffold the React app under `frontend/`
+- Build the Pokemon lookup page first
+- Build the team analysis page second
+- Add frontend validation, loading states, and integration tests
+
+### Notes
+- A local verification attempt in this sandbox showed the repository does not include `mvnw.cmd`
+- A sandbox Maven run also failed because the default local Maven repository path was not writable in this environment
+
+## Session 7
+### Goal
+Refine the frontend planning documents so the React UI work can be executed in clear phases.
+
+### Completed
+- Reviewed the current backend API contract and documentation again before expanding the frontend plan
+- Updated `docs/tasks.md` with a more detailed frontend breakdown across setup, Pokedex, Team Builder, Team Analysis, testing, and documentation phases
+- Updated `docs/architecture.md` with a React UI structure, component groups, route-level state ownership, and frontend-backend data flow
+- Updated `docs/assumptions.md` with React, Vite, Axios, routing, UI validation, and placeholder behavior assumptions
+- Updated `README.md` with planned frontend stack, component structure, and local run instructions for the React app once scaffolded
+- Added UI inspiration references in the documentation based on common patterns from Pokemon Showdown, Pokemon Database, and Serebii
+
+### Decisions made
+- Use Vite as the planned React bootstrap tool
+- Use Axios and React Router as the baseline frontend integration stack
+- Keep the frontend split into three primary views: Pokedex, Team Builder, and Team Analysis
+- Keep the team builder fixed at 6 visible slots for clarity, even when some slots are empty
+- Prefer simple CSS with shared design tokens over adding a large UI framework by default
+
+### Next steps
+- Scaffold the React app under `frontend/`
+- Build shared app shell, routing, API utilities, and common UI primitives
+- Implement the Pokedex view first, then Team Builder, then Team Analysis
+- Add responsive styling and frontend tests after the main flows are working
+
+### Notes
+- This session updated planning and documentation only; no frontend code was created yet
+
+## Session 8
+### Goal
+Update the frontend planning docs for the new Pokemon image strategy.
+
+### Completed
+- Updated `docs/tasks.md` to add component tasks for artwork-first image handling, sprite fallback behavior, and image loading states
+- Updated `docs/assumptions.md` to document official artwork preference, sprite fallback, and frontend image-loading feedback expectations
+- Updated `docs/architecture.md` to include image resolution flow, component responsibilities, and image loading or error state ownership
+- Updated `README.md` to replace the old placeholder-image direction with official artwork first and sprite fallback
+
+### Decisions made
+- Prefer PokéAPI official artwork for the main frontend Pokemon visual when it is available
+- Use classic sprite imagery as the fallback instead of relying on separate placeholder images
+- Keep plus-style empty slot UI for unfilled team positions, but not as a replacement for real Pokemon images
+- Keep frontend and backend validation aligned at 1 to 6 Pokemon per team
+
+### Next steps
+- Implement the actual frontend image helper and image component logic once the React app exists in the repository
+- Ensure the backend or frontend data model exposes enough image data to support official artwork and sprite fallback cleanly
+
+### Notes
+- This session updated documentation only
+- The current workspace still does not contain a `frontend/` directory, so the docs remain descriptive rather than marking frontend tasks complete
+
+## Session 9
+### Goal
+Verify that the documentation still matches the actual backend implementation before starting frontend Phase 1.
+
+### Completed
+- Reviewed the backend DTOs, mapper, and team analysis response shape against the planning docs
+- Corrected the docs so they no longer imply the live backend already returns `officialArtworkUrl`
+- Corrected the docs so frontend image handling is described as a planned backend contract extension rather than an existing field
+- Clarified that the `frontend/` structure in the documentation is still planned and not yet scaffolded in the repository
+
+### Decisions made
+- Treat `spriteUrl` as the only currently implemented Pokemon image field in the backend
+- Treat `officialArtworkUrl` as a required backend enhancement before artwork-first frontend rendering can be implemented cleanly without direct PokeAPI calls
+- Keep the frontend documentation aligned with the backend-only API boundary
+
+### Next steps
+- Extend the backend Pokemon DTO and mapper if official artwork should be available to the frontend through the backend
+- Scaffold the actual React app under `frontend/`
+- Start frontend Phase 1 only after the image contract decision is finalized
+
+### Notes
+- This verification pass found no issue with backend validation or error-response documentation
