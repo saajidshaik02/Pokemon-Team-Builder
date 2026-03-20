@@ -11,14 +11,31 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Service that converts analysis outputs into user-facing recommendations.
+ *
+ * <p>The rules in this service are intentionally deterministic and easy to explain.
+ * It combines matchup exposure, role balance, and stat summary thresholds into
+ * concise next-step suggestions.</p>
+ */
 @Service
 public class TeamRecommendationService {
 
+    /**
+     * Generates recommendations for a team based on matchup, role, and stat analysis.
+     *
+     * @param typeAnalysis aggregated type matchup analysis for the team
+     * @param roleAnalysis aggregated role analysis for the team
+     * @param statSummary aggregate stat totals, averages, strengths, and weaknesses
+     * @return ordered, deduplicated recommendation messages
+     */
     public List<String> generate(
             TypeAnalysisResponse typeAnalysis,
             RoleAnalysisResponse roleAnalysis,
             StatSummaryResponse statSummary
     ) {
+        // LinkedHashSet preserves insertion order while preventing repeated suggestions
+        // when multiple rules point to the same high-level recommendation.
         LinkedHashSet<String> recommendations = new LinkedHashSet<>();
 
         for (WeaknessResponse weakness : typeAnalysis.weaknesses()) {

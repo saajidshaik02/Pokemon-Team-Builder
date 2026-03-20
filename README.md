@@ -25,7 +25,7 @@ The Spring Boot backend lives under `backend/` and follows the layered architect
 - `GET /api/pokemon/{name}`
 - `POST /api/team/analyze`
 
-Detailed Postman setup and example responses are in the testing section below.
+Detailed request setup and example responses are in the `Testing With Postman` section below.
 
 ## Run Locally
 
@@ -45,15 +45,12 @@ mvn spring-boot:run
 ## Testing With Postman
 
 Postman is the recommended tool for manual API testing during development.
-
-- Avoid using `curl` or PowerShell for endpoint checks in the README workflow
-- Use Postman requests or collections for structured testing
 - Test these endpoints in Postman:
   - `GET /api/health`
   - `GET /api/pokemon/{name}`
   - `POST /api/team/analyze`
 
-### Postman: Health Endpoint
+### Health Endpoint
 
 1. Set method to `GET`.
 2. Set URL to `http://localhost:8080/api/health`.
@@ -65,7 +62,7 @@ Expected response:
 {"status":"ok"}
 ```
 
-### Postman: Pokemon Lookup
+### Pokemon Lookup
 
 1. Set method to `GET`.
 2. Set URL to `http://localhost:8080/api/pokemon/pikachu`.
@@ -91,7 +88,7 @@ Expected response:
 }
 ```
 
-### Postman: Team Analysis
+### Team Analysis
 
 1. Set method to `POST`.
 2. Set URL to `http://localhost:8080/api/team/analyze`.
@@ -108,7 +105,7 @@ Expected response:
 
 7. Click `Send`.
 
-Expected response:
+Expected response shape:
 
 ```json
 {
@@ -124,51 +121,16 @@ Expected response:
         "affectedPokemon": ["charizard", "blastoise"],
         "coveringPokemon": ["pikachu"],
         "severity": "shared weakness"
-      },
-      {
-        "type": "grass",
-        "affectedPokemon": ["blastoise"],
-        "coveringPokemon": ["charizard"],
-        "severity": "isolated weakness"
-      },
-      {
-        "type": "ground",
-        "affectedPokemon": ["pikachu"],
-        "coveringPokemon": ["charizard"],
-        "severity": "isolated weakness"
-      },
-      {
-        "type": "rock",
-        "affectedPokemon": ["charizard"],
-        "coveringPokemon": [],
-        "severity": "isolated weakness"
-      },
-      {
-        "type": "water",
-        "affectedPokemon": ["charizard"],
-        "coveringPokemon": ["blastoise"],
-        "severity": "isolated weakness"
       }
     ],
     "resistances": [
-      { "type": "bug", "pokemon": ["charizard"] },
-      { "type": "electric", "pokemon": ["pikachu"] },
-      { "type": "fairy", "pokemon": ["charizard"] },
-      { "type": "fighting", "pokemon": ["charizard"] },
-      { "type": "fire", "pokemon": ["charizard", "blastoise"] },
-      { "type": "flying", "pokemon": ["pikachu"] },
-      { "type": "grass", "pokemon": ["charizard"] },
-      { "type": "ice", "pokemon": ["blastoise"] },
-      { "type": "steel", "pokemon": ["pikachu", "charizard", "blastoise"] },
-      { "type": "water", "pokemon": ["blastoise"] }
+      { "type": "electric", "pokemon": ["pikachu"] }
     ],
     "immunities": [
       { "type": "ground", "pokemon": ["charizard"] }
     ],
     "synergyNotes": [
-      "electric pressure can be covered by pikachu",
-      "team is comfortable into fire attacks",
-      "team is comfortable into steel attacks"
+      "electric pressure can be covered by pikachu"
     ]
   },
   "roleAnalysis": {
@@ -188,42 +150,26 @@ Expected response:
     ]
   },
   "statSummary": {
-    "totalHp": 192,
-    "totalAttack": 222,
-    "totalDefense": 218,
-    "totalSpecialAttack": 244,
-    "totalSpecialDefense": 240,
-    "totalSpeed": 268,
-    "averageHp": 64,
-    "averageAttack": 74,
-    "averageDefense": 73,
-    "averageSpecialAttack": 81,
-    "averageSpecialDefense": 80,
-    "averageSpeed": 89,
+    "totalHp": 162,
+    "totalAttack": 194,
+    "totalDefense": 162,
+    "totalSpecialAttack": 194,
+    "totalSpecialDefense": 190,
+    "totalSpeed": 258,
+    "averageHp": 54,
+    "averageAttack": 65,
+    "averageDefense": 54,
+    "averageSpecialAttack": 65,
+    "averageSpecialDefense": 63,
+    "averageSpeed": 86,
     "strengths": [],
     "weaknesses": [
       "team is light on physical defense",
-      "team has low average HP"
+      "team is light on special defense",
+      "team has low average HP",
+      "team lacks strong attacking stats"
     ]
   },
-  "recommendations": [
-    "Consider adding a bulkier Pokemon to improve the team's overall durability."
-  ]
-}
-```
-
-### Error Response Shape
-
-All endpoints return a consistent JSON error payload for client-facing failures.
-
-Example:
-
-```json
-{
-  "status": 404,
-  "error": "Not Found",
-  "message": "Pokemon 'missingno' was not found. Check the name and try again.",
-  "path": "/api/pokemon/missingno",
-  "timestamp": "2026-03-20T14:21:00Z"
+  "recommendations": []
 }
 ```

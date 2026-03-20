@@ -8,15 +8,34 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
+/**
+ * Client responsible for fetching raw Pokemon data from PokeAPI.
+ *
+ * <p>This class isolates external HTTP communication from the service layer and
+ * converts low-level client failures into application-specific exceptions.</p>
+ */
 @Component
 public class PokeApiClient {
 
     private final RestClient pokeApiRestClient;
 
+    /**
+     * Creates a new PokeAPI client.
+     *
+     * @param pokeApiRestClient configured REST client pointing at the PokeAPI base URL
+     */
     public PokeApiClient(@Qualifier("pokeApiRestClient") RestClient pokeApiRestClient) {
         this.pokeApiRestClient = pokeApiRestClient;
     }
 
+    /**
+     * Fetches raw Pokemon data by normalized name.
+     *
+     * @param normalizedName normalized lowercase Pokemon name used in the upstream request
+     * @return raw PokeAPI Pokemon response data
+     * @throws PokemonNotFoundException if the Pokemon does not exist upstream
+     * @throws ExternalServiceException if the upstream service is unavailable or returns an unusable payload
+     */
     public PokeApiPokemonResponse getPokemonByName(String normalizedName) {
         try {
             PokeApiPokemonResponse response = pokeApiRestClient.get()

@@ -7,9 +7,21 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service that summarizes the combined stats of a Pokemon team.
+ *
+ * <p>This service calculates totals, averages, and simple strengths and weaknesses
+ * from the team's normalized base stats to support readable team-level feedback.</p>
+ */
 @Service
 public class TeamStatSummaryService {
 
+    /**
+     * Builds a stat summary for a resolved team.
+     *
+     * @param team normalized Pokemon details for the submitted team
+     * @return totals, averages, and stat-based strengths and weaknesses
+     */
     public StatSummaryResponse summarize(List<PokemonDetailsResponse> team) {
         int teamSize = team.size();
         int totalHp = team.stream().mapToInt(pokemon -> pokemon.stats().hp()).sum();
@@ -44,10 +56,28 @@ public class TeamStatSummaryService {
         );
     }
 
+    /**
+     * Calculates the rounded average for a stat total.
+     *
+     * @param total summed stat value across the team
+     * @param teamSize number of Pokemon in the team
+     * @return rounded average stat value
+     */
     private int average(int total, int teamSize) {
         return Math.round((float) total / teamSize);
     }
 
+    /**
+     * Builds human-readable stat strengths from average team values.
+     *
+     * @param averageHp average HP across the team
+     * @param averageAttack average Attack across the team
+     * @param averageDefense average Defense across the team
+     * @param averageSpecialAttack average Special Attack across the team
+     * @param averageSpecialDefense average Special Defense across the team
+     * @param averageSpeed average Speed across the team
+     * @return strength messages derived from the team's average stats
+     */
     private List<String> buildStrengths(
             int averageHp,
             int averageAttack,
@@ -81,6 +111,17 @@ public class TeamStatSummaryService {
         return strengths;
     }
 
+    /**
+     * Builds human-readable stat weaknesses from average team values.
+     *
+     * @param averageHp average HP across the team
+     * @param averageAttack average Attack across the team
+     * @param averageDefense average Defense across the team
+     * @param averageSpecialAttack average Special Attack across the team
+     * @param averageSpecialDefense average Special Defense across the team
+     * @param averageSpeed average Speed across the team
+     * @return weakness messages derived from the team's average stats
+     */
     private List<String> buildWeaknesses(
             int averageHp,
             int averageAttack,

@@ -12,9 +12,21 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+/**
+ * Service that aggregates team-wide type matchup information.
+ *
+ * <p>This service evaluates weaknesses, resistances, immunities, and simple synergy
+ * notes by applying the static type-effectiveness chart to every team member.</p>
+ */
 @Service
 public class TeamTypeAnalysisService {
 
+    /**
+     * Produces matchup analysis for a resolved Pokemon team.
+     *
+     * @param team normalized Pokemon details for the submitted team
+     * @return structured type analysis including weaknesses, resistances, immunities, and synergy notes
+     */
     public TypeAnalysisResponse analyze(List<PokemonDetailsResponse> team) {
         List<WeaknessResponse> weaknesses = new ArrayList<>();
         List<TypeCoverageResponse> resistances = new ArrayList<>();
@@ -39,6 +51,8 @@ public class TeamTypeAnalysisService {
             }
 
             if (!weakPokemon.isEmpty()) {
+                // Coverage Pokemon are teammates that either resist or completely ignore
+                // the threatening attack type, making them natural pivots into that matchup.
                 List<String> coveringPokemon = new ArrayList<>(new LinkedHashSet<>(resistingPokemon));
                 coveringPokemon.addAll(
                         immunePokemon.stream()
@@ -81,6 +95,14 @@ public class TeamTypeAnalysisService {
         return new TypeAnalysisResponse(weaknesses, resistances, immunities, synergyNotes);
     }
 
+    /**
+     * Converts the number of affected teammates and available coverage into a simple
+     * user-facing weakness severity label.
+     *
+     * @param weakCount number of Pokemon weak to the attacking type
+     * @param noCoverage whether the team lacks any resist or immunity for the type
+     * @return the severity label used in the type analysis response
+     */
     private String determineSeverity(int weakCount, boolean noCoverage) {
         if (weakCount >= 3) {
             return "major weakness";

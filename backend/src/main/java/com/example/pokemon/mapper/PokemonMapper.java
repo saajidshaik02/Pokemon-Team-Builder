@@ -9,9 +9,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Mapper that converts raw PokeAPI payloads into normalized API DTOs.
+ *
+ * <p>This class keeps transformation logic out of controllers and services so the
+ * external payload shape remains isolated from the public API contract.</p>
+ */
 @Component
 public class PokemonMapper {
 
+    /**
+     * Maps a raw PokeAPI Pokemon response into the normalized response DTO.
+     *
+     * @param response raw upstream Pokemon payload
+     * @return normalized Pokemon details used by the API
+     */
     public PokemonDetailsResponse toPokemonResponse(PokeApiPokemonResponse response) {
         return new PokemonDetailsResponse(
                 response.id(),
@@ -23,6 +35,12 @@ public class PokemonMapper {
         );
     }
 
+    /**
+     * Extracts normalized type names from the raw upstream type slots.
+     *
+     * @param types raw upstream type-slot collection
+     * @return ordered list of type names
+     */
     private List<String> mapTypes(List<PokeApiPokemonResponse.TypeSlot> types) {
         if (types == null) {
             return List.of();
@@ -36,6 +54,12 @@ public class PokemonMapper {
                 .toList();
     }
 
+    /**
+     * Extracts normalized ability names from the raw upstream ability list.
+     *
+     * @param abilities raw upstream ability collection
+     * @return list of ability names
+     */
     private List<String> mapAbilities(List<PokeApiPokemonResponse.AbilitySlot> abilities) {
         if (abilities == null) {
             return List.of();
@@ -48,6 +72,12 @@ public class PokemonMapper {
                 .toList();
     }
 
+    /**
+     * Maps upstream stat entries into the normalized stats DTO.
+     *
+     * @param stats raw upstream stat collection
+     * @return normalized Pokemon stats DTO
+     */
     private PokemonStatsResponse mapStats(List<PokeApiPokemonResponse.StatSlot> stats) {
         Map<String, Integer> statValues = new LinkedHashMap<>();
 

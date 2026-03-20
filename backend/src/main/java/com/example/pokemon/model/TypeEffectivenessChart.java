@@ -6,6 +6,13 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
+/**
+ * Static type-effectiveness lookup table used by team matchup analysis.
+ *
+ * <p>The chart stores attack-type to defense-type multipliers and exposes helpers
+ * for iterating supported attack types and calculating combined multipliers for
+ * dual-type Pokemon.</p>
+ */
 public final class TypeEffectivenessChart {
 
     private static final Map<String, Map<String, Double>> ATTACK_CHART = createChart();
@@ -13,10 +20,23 @@ public final class TypeEffectivenessChart {
     private TypeEffectivenessChart() {
     }
 
+    /**
+     * Returns all supported attacking types in deterministic iteration order.
+     *
+     * @return ordered list of attack types represented in the chart
+     */
     public static List<String> attackTypes() {
         return List.copyOf(ATTACK_CHART.keySet());
     }
 
+    /**
+     * Calculates the full type-effectiveness multiplier for an attacking type
+     * against one or more defending types.
+     *
+     * @param attackType attacking type being evaluated
+     * @param defendingTypes defending Pokemon type list
+     * @return combined type-effectiveness multiplier
+     */
     public static double multiplier(String attackType, List<String> defendingTypes) {
         double multiplier = 1.0;
 
@@ -29,6 +49,11 @@ public final class TypeEffectivenessChart {
         return multiplier;
     }
 
+    /**
+     * Creates the full static attack chart used for matchup analysis.
+     *
+     * @return immutable type-effectiveness chart keyed by attack type
+     */
     private static Map<String, Map<String, Double>> createChart() {
         Map<String, Map<String, Double>> chart = new LinkedHashMap<>();
         chart.put("normal", effectiveness(entry("rock", 0.5), entry("ghost", 0.0), entry("steel", 0.5)));
@@ -52,6 +77,12 @@ public final class TypeEffectivenessChart {
         return Map.copyOf(chart);
     }
 
+    /**
+     * Convenience helper for declaring type-effectiveness entries.
+     *
+     * @param entries defense-type to multiplier entries
+     * @return immutable effectiveness map for a single attack type
+     */
     @SafeVarargs
     private static Map<String, Double> effectiveness(Map.Entry<String, Double>... entries) {
         return Map.ofEntries(entries);
