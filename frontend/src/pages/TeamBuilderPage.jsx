@@ -94,9 +94,8 @@ function TeamBuilderPage() {
         <p className="eyebrow">Team Builder</p>
         <h2>Team Builder</h2>
         <p>
-          Build a six-slot team locally by looking up Pokemon through the backend. The builder
-          keeps sprite-first visuals compact while preserving official artwork in state for the
-          next analysis phase.
+          Build a six-slot lineup, test different cores, and shape the order you want to carry
+          into team analysis.
         </p>
         <AddPokemonForm
           name={values.name}
@@ -122,8 +121,7 @@ function TeamBuilderPage() {
         </div>
 
         <p className="team-builder-summary">
-          Slot order is kept in local state so later analysis requests can submit the team in the
-          same order shown here.
+          Keep the order you want to analyze and adjust the lineup until the mix feels right.
         </p>
         {team.length === 0 ? (
           <div className="empty-state-card empty-state-card--team-builder">
@@ -143,8 +141,8 @@ function TeamBuilderPage() {
           <p className="eyebrow">Next Step</p>
           <h3>Analyze Team</h3>
           <p>
-            Move directly into the analysis view with the current ordered team. The next page will
-            submit these names to the backend and reuse the cached image data for the summary.
+            Take this lineup straight into analysis to check shared weaknesses, role balance, and
+            overall stat pressure.
           </p>
         </div>
         <button

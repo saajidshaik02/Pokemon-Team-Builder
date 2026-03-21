@@ -25,8 +25,7 @@ function AddPokemonForm({
         </button>
       </div>
       <p className="pokemon-search-form__hint">
-        Team slots use sprite-first rendering to stay compact. Official artwork is still kept in
-        state for later analysis views.
+        Fill your six slots one at a time and keep the lineup easy to scan as you build.
       </p>
     </form>
   )

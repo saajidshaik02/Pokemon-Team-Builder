@@ -7,7 +7,6 @@ import { analyzeTeam, getPokemonByName } from '../api/index.js'
 vi.mock('../api/index.js', () => ({
   getPokemonByName: vi.fn(),
   analyzeTeam: vi.fn(),
-  getHealthStatus: vi.fn(),
 }))
 
 const analysisResponse = {

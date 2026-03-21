@@ -25,7 +25,6 @@ It is not a design spec. It explains the main page responsibilities, shared hook
 Use the shared API entrypoint instead of importing deep modules from pages:
 
 - `frontend/src/api/index.js`
-  - exports `getHealthStatus`
   - exports `getPokemonByName`
   - exports `normalizePokemonDetails`
   - exports `analyzeTeam`
@@ -39,7 +38,6 @@ Supporting modules:
 
 - `frontend/src/api/pokemonApi.js`
   - `getPokemonByName(name)` calls `GET /api/pokemon/{name}`
-  - `getHealthStatus()` calls `GET /api/health`
   - normalizes Pokemon DTOs so the frontend keeps backend field names like `officialArtworkUrl` and `spriteUrl`
 
 - `frontend/src/api/teamApi.js`

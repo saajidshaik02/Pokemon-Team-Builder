@@ -38,12 +38,4 @@ export async function getPokemonByName(name) {
   return normalizePokemonDetails(response.data)
 }
 
-/**
- * Reads the backend health endpoint used by local verification and diagnostics.
- */
-export async function getHealthStatus() {
-  const response = await httpClient.get('/api/health')
-  return response.data
-}
-
 export { normalizePokemonDetails }

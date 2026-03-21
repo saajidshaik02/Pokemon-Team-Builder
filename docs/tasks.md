@@ -9,7 +9,6 @@ Turn the existing Spring Boot Pokemon Team Analysis backend into a usable full-s
 Backend complete:
 - [x] Spring Boot project scaffolded
 - [x] Layered backend package structure in place
-- [x] `GET /api/health` implemented
 - [x] `GET /api/pokemon/{name}` implemented
 - [x] `POST /api/team/analyze` implemented
 - [x] Type analysis implemented
@@ -29,7 +28,6 @@ Documentation alignment:
 Backend maintenance:
 - [x] Refactor role classification to use relative stat distribution heuristics instead of only flat raw-stat thresholds
 - [x] Centralize backend analysis threshold constants to remove service-level magic numbers in the impacted analysis services
-- [x] Replace `HealthControllerTest.java` with a focused Web MVC health endpoint test
 - [x] Add Swagger or OpenAPI support for manual backend API testing
 
 ## Phase 1: Frontend planning and setup
@@ -200,7 +198,7 @@ Phase 7 note:
 ## Phase 9: Full-stack verification
 
 - [x] Run backend and frontend together locally
-- [x] Verify health, Pokemon lookup, and team analysis flows end to end
+- [x] Verify Pokemon lookup and team analysis flows end to end
 - [x] Verify backend error messages are surfaced clearly in the UI
 - [x] Verify the team cannot exceed 6 Pokemon
 - [x] Verify mobile layout behavior for the three main views

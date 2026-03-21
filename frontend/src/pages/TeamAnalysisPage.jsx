@@ -155,9 +155,8 @@ function TeamAnalysisPage() {
         <p className="eyebrow">Team Analysis</p>
         <h2>Team Analysis</h2>
         <p>
-          Submit a team of 1 to 6 Pokemon to the backend analysis endpoint. The page keeps
-          weaknesses first, separates role and stat sections, and prefers official artwork in the
-          summary when image data is available.
+          Analyze a team of up to six Pokemon and read the biggest pressure points first, from
+          shared weaknesses to role balance and stat spread.
         </p>
         <TeamAnalysisForm
           value={values.teamInput}
@@ -193,8 +192,8 @@ function TeamAnalysisPage() {
               : 'Analyze a team from scratch or from the builder'}
           </h3>
           <p>
-            Enter Pokemon names separated by commas or line breaks, or start from the Team Builder
-            route and carry the current team straight into analysis.
+            Enter Pokemon names separated by commas or line breaks, or bring a lineup over from
+            the Team Builder.
           </p>
         </div>
       ) : null}

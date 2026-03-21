@@ -21,8 +21,8 @@ function PokemonCard({ pokemon }) {
             <span className="pokemon-card__dex">#{pokemon.id}</span>
           </div>
           <p className="pokemon-card__summary">
-            Official artwork is preferred here for a cleaner profile view, with sprite fallback
-            handled automatically if the artwork is missing or broken.
+            A cleaner profile view with typing, abilities, and the base stats that shape how this
+            Pokemon plays.
           </p>
           <div className="type-badge-list">
             {pokemon.types.map((type) => (

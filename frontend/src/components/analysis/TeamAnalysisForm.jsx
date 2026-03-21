@@ -25,7 +25,7 @@ function TeamAnalysisForm({
           {isSubmitting ? 'Analyzing...' : 'Analyze Team'}
         </button>
         <p className="pokemon-search-form__hint">
-          The backend remains authoritative for validation and final team analysis.
+          Use commas or line breaks to compare different combinations quickly.
         </p>
       </div>
       {validationMessage ? (

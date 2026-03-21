@@ -20,7 +20,6 @@ Set up project documentation and development rules.
 
 ### Next steps
 - Scaffold Spring Boot project
-- Add health endpoint
 - Set up package structure
 
 ### Notes
@@ -34,13 +33,12 @@ Complete the backend scaffold and add single Pokemon lookup for Phase 1 and Phas
 ### Completed
 - Scaffolded the Spring Boot Maven backend under `backend/`
 - Added the required layered package structure under `com.example.pokemon`
-- Added `GET /api/health`
 - Added PokeAPI client configuration and external API client code
 - Added `GET /api/pokemon/{name}`
 - Normalized Pokemon names to lowercase before lookup
 - Mapped PokeAPI responses into internal DTOs instead of exposing raw responses
 - Added clear JSON error handling for invalid Pokemon names and upstream API failures
-- Added focused tests for the health endpoint, Pokemon controller, mapper, and service
+- Added focused tests for Pokemon controller, mapper, and service
 - Verified the backend with `mvn test`
 
 ### Decisions made
@@ -126,13 +124,13 @@ Complete final polish, documentation, architecture review, and submission checks
 ### Completed
 - Improved client-facing error payloads with `path` and `timestamp`
 - Added clearer invalid-name, invalid-JSON, and upstream service messages
-- Renamed DTOs for clearer API intent: health status, Pokemon details, and error response payloads
+- Renamed DTOs for clearer API intent: Pokemon details and error response payloads
 - Extracted team recommendation generation into a dedicated service to reduce orchestration duplication
 - Expanded automated coverage for Pokemon lookup edge cases, invalid JSON handling, oversized teams, and recommendation behavior
 - Reviewed the codebase against the documented controller, service, client, dto, mapper, model, exception, and config layers
 - Updated the README to match the final live team-analysis response and error format
 - Updated project assumptions to reflect duplicate-team rejection, stat-summary thresholds, and the final error-response contract
-- Performed final manual endpoint checks for `/api/health`, `/api/pokemon/pikachu`, and `/api/team/analyze`
+- Performed final manual endpoint checks for `/api/pokemon/pikachu` and `/api/team/analyze`
 - Verified the backend with `mvn test`
 
 ### Decisions made
@@ -146,7 +144,7 @@ Complete final polish, documentation, architecture review, and submission checks
 
 ### Notes
 - Automated tests passed with 18 total tests
-- Final manual endpoint testing confirmed health, Pokemon lookup, and team analysis were all working
+- Final manual endpoint testing confirmed Pokemon lookup and team analysis were all working
 - Mockito still emits a non-blocking dynamic agent warning during tests
 
 ## Session 6
@@ -313,7 +311,6 @@ Perform a focused backend correction pass for analysis heuristics, threshold cle
 ### Completed
 - Refactored role classification to use relative stat distribution shares across offense, bulk, and speed instead of only flat raw-stat cutoffs
 - Centralized backend heuristic thresholds in `AnalysisThresholds` so role, type, stat-summary, and recommendation services no longer rely on scattered magic numbers
-- Replaced `HealthControllerTest.java` with a narrower `HealthControllerWebMvcTest.java` to keep useful endpoint coverage without the heavier full-context test
 - Added Springdoc OpenAPI support, controller endpoint annotations, and explicit `/swagger-ui.html` and `/api-docs` paths for manual API testing
 - Updated repo documentation to record the new threshold-centralization and API-documentation conventions
 - Verified the backend with `mvn test`
@@ -321,7 +318,6 @@ Perform a focused backend correction pass for analysis heuristics, threshold cle
 ### Decisions made
 - Keep heuristic thresholds in shared backend constants rather than YAML because these values are deterministic code rules, not deployment-specific configuration
 - Keep the role categories unchanged while improving how the service chooses between them
-- Keep health endpoint coverage, but align it with the lighter Web MVC test style already used for the other controllers
 
 ### Next steps
 - Optionally add DTO-level OpenAPI examples if richer Swagger payload examples become useful during frontend implementation
@@ -500,7 +496,7 @@ Complete Phase 9 with live full-stack verification.
 
 ### Completed
 - Started the backend and frontend locally and confirmed both were serving on their configured local ports
-- Verified `GET /api/health`, `GET /api/pokemon/pikachu`, and `POST /api/team/analyze` against the live backend while the frontend dev server was also running
+- Verified `GET /api/pokemon/pikachu` and `POST /api/team/analyze` against the live backend while the frontend dev server was also running
 - Confirmed the backend returned the expected `400` validation payload for a team larger than 6 Pokemon
 - Added explicit backend CORS configuration for the frontend dev origin after the initial browser-style preflight check failed with `403`
 - Fixed live `officialArtworkUrl` deserialization from PokeAPI's `official-artwork` field and added a regression test for that upstream key mapping
@@ -537,3 +533,35 @@ Finish the remaining documentation cleanup and add a concise frontend code refer
 
 ### Notes
 - The frontend codebase still relies mostly on clear naming and structure rather than JSDoc-style inline documentation
+
+## Session 21
+### Goal
+Clarify the README around Swagger usage, repo structure, and the local run flow.
+
+### Completed
+- Removed the old Postman or curl emphasis from the README backend-testing section
+- Added a Swagger-first backend testing section with the exact Swagger UI and OpenAPI URLs
+- Reworked the README structure so the product flow, backend or frontend roles, and local run order are easier to scan
+- Added a clearer full local run sequence for starting backend, opening Swagger, starting frontend, and testing the main user flows
+
+### Decisions made
+- Treat Swagger as the primary documented backend-testing surface for this repo
+- Keep the README user-oriented and operational rather than turning it into a low-level architecture dump
+
+### Next steps
+- No tracked implementation tasks remain
+
+## Session 22
+### Goal
+Replace the frontend header hero image with the pokeball asset and remove the old image file.
+
+### Completed
+- Switched the app shell header image import from `src/assets/hero.png` to `src/assets/pokeball.png`
+- Removed the obsolete `src/assets/hero.png` file
+- Removed the stale built `dist/assets/hero-5sT3BiRD.png` artifact so the build output matches the current source
+
+### Decisions made
+- Keep the pokeball graphic as the single source-backed decorative header image instead of maintaining a separate hero illustration file
+
+### Next steps
+- No tracked implementation tasks remain

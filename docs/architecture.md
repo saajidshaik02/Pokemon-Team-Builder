@@ -15,7 +15,6 @@ The project is intentionally lightweight. It focuses on explainable analysis rat
 
 Implemented now:
 - Spring Boot backend API under `backend/`
-- health endpoint
 - single Pokemon lookup endpoint
 - team analysis endpoint
 - type, role, stat, and recommendation logic
@@ -224,18 +223,6 @@ Manual API docs are exposed through Springdoc:
 - Swagger UI: `/swagger-ui.html`
 - OpenAPI JSON: `/api-docs`
 
-### Health check
-
-`GET /api/health`
-
-Returns backend availability:
-
-```json
-{
-  "status": "ok"
-}
-```
-
 ### Pokemon lookup
 
 `GET /api/pokemon/{name}`
@@ -409,7 +396,6 @@ UX behavior:
 Recommended API helpers:
 - `getPokemonByName(name)`
 - `analyzeTeam(pokemonNames)`
-- `getHealthStatus()`
 - frontend pages should import backend request helpers through a shared API entry module so the page layer is not coupled to lower-level file layout
 
 Recommended image helper behavior:

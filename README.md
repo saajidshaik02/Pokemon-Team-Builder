@@ -6,10 +6,22 @@ Pokemon Team Builder is a full-stack Pokemon team analysis project with:
 
 The application now supports live Pokemon lookup, six-slot team building, backend-driven team analysis, frontend testing, and local full-stack verification.
 
-## Current status
+## What the App Does
+
+The product has three main user flows:
+- `Pokedex`: search one Pokemon and view its typing, abilities, and base stats
+- `Team Builder`: assemble a six-slot lineup and adjust the order
+- `Team Analysis`: review shared weaknesses, resistances, immunities, role balance, stat spread, and recommendations
+
+At a high level, the flow is:
+1. the frontend collects user input
+2. the frontend calls the backend REST API
+3. the backend looks up Pokemon data and runs deterministic team analysis
+4. the frontend renders the results in Pokedex, Team Builder, and Team Analysis views
+
+## Current Status
 
 Implemented now:
-- `GET /api/health`
 - `GET /api/pokemon/{name}`
 - `POST /api/team/analyze`
 - deterministic type, role, stat, and recommendation analysis
@@ -21,27 +33,15 @@ Implemented now:
 - Vitest and Testing Library frontend coverage
 - local backend CORS support for browser-based frontend development
 
-## UI direction
-
-The frontend takes inspiration from a few well-known Pokemon tools:
-- Pokemon Showdown teambuilder for fast team slot workflows
-- Pokemon Database Pokedex pages for readable single-Pokemon detail views
-- Serebii Pokedex pages for compact data grouping and stat presentation
-
-The frontend should use those patterns in a lighter way:
-- searchable Pokemon detail card
-- six visible team slots with artwork or sprite fallback
-- sectioned analysis layout with weaknesses, roles, synergy notes, and recommendations
-
-## Repository structure
+## Repository Structure
 
 ```text
 backend/   Spring Boot API
-docs/      Architecture, assumptions, tasks, and session log
+docs/      Architecture, assumptions, frontend reference, tasks, and session log
 frontend/  React frontend application
 ```
 
-## Backend structure
+## Backend Structure
 
 The Spring Boot backend lives under `backend/` and follows the layered architecture documented in `docs/architecture.md`.
 
@@ -55,48 +55,7 @@ The Spring Boot backend lives under `backend/` and follows the layered architect
 - `backend/src/main/java/com/example/pokemon/config`: Spring configuration
 - `backend/src/test/java/com/example/pokemon`: controller, service, and mapper tests
 
-## Available backend endpoints
-
-- `GET /api/health`
-- `GET /api/pokemon/{name}`
-- `POST /api/team/analyze`
-
-## Run the backend locally
-
-Prerequisites:
-- Java 21 installed and available in `PATH`
-- Maven 3.9+ installed and available in `PATH`
-
-Run:
-
-```bash
-cd backend
-mvn test
-mvn spring-boot:run
-```
-
-The backend runs on `http://localhost:8080` by default.
-
-For local browser-based frontend use, the backend now allows one configured frontend origin through
-`pokemon.frontend.allowed-origin` in `backend/src/main/resources/application.yml`.
-
-API documentation:
-- Swagger UI: `http://localhost:8080/swagger-ui.html`
-- OpenAPI JSON: `http://localhost:8080/api-docs`
-
-## Frontend stack
-
-- React
-- Vite
-- React Router
-- Axios
-- Vitest
-- Testing Library
-- CSS with shared design tokens and responsive layouts
-
-Vite is used because it provides a faster development server, lighter setup, and simpler build configuration for this project than older React scaffolds.
-
-## Frontend structure
+## Frontend Structure
 
 ```text
 frontend/
@@ -118,7 +77,80 @@ frontend/
     main.jsx
 ```
 
-## Frontend component breakdown
+## UI Direction
+
+The frontend takes inspiration from a few well-known Pokemon tools:
+- Pokemon Showdown teambuilder for fast team slot workflows
+- Pokemon Database Pokedex pages for readable single-Pokemon detail views
+- Serebii Pokedex pages for compact data grouping and stat presentation
+
+The frontend should use those patterns in a lighter way:
+- searchable Pokemon detail card
+- six visible team slots with artwork or sprite fallback
+- sectioned analysis layout with weaknesses, roles, synergy notes, and recommendations
+
+## Backend Endpoints
+
+- `GET /api/pokemon/{name}`
+- `POST /api/team/analyze`
+
+## Run the Backend
+
+Prerequisites:
+- Java 21 installed and available in `PATH`
+- Maven 3.9+ installed and available in `PATH`
+
+Run:
+
+```bash
+cd backend
+mvn test
+mvn spring-boot:run
+```
+
+The backend runs on `http://localhost:8080` by default.
+
+For local browser-based frontend use, the backend now allows one configured frontend origin through
+`pokemon.frontend.allowed-origin` in `backend/src/main/resources/application.yml`.
+
+Swagger and OpenAPI:
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/api-docs`
+
+## Test the Backend in Swagger
+
+1. Start the backend:
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
+2. Open Swagger UI:
+   - `http://localhost:8080/swagger-ui.html`
+3. Use `Try it out` on:
+   - `GET /api/pokemon/{name}`
+   - `POST /api/team/analyze`
+4. Example inputs:
+   - Pokemon lookup: `pikachu`
+   - Team analysis body:
+     ```json
+     {
+       "pokemonNames": ["pikachu", "charizard", "blastoise"]
+     }
+     ```
+
+## Frontend Stack
+
+- React
+- Vite
+- React Router
+- Axios
+- Vitest
+- Testing Library
+- CSS with shared design tokens and responsive layouts
+
+Vite is used because it provides a faster development server, lighter setup, and simpler build configuration for this project than older React scaffolds.
+
+## Frontend Pages
 
 ### Pokedex
 
@@ -134,9 +166,6 @@ Main components:
 Behavior:
 - search by Pokemon name
 - call `GET /api/pokemon/{name}`
-- use `spriteUrl` for quick lookup states and profile previews
-- use `officialArtworkUrl` for polished detailed Pokemon views when available
-- fallback from `officialArtworkUrl` to `spriteUrl` when needed
 - show types, abilities, and stats
 - show backend error messages for invalid names
 
@@ -154,8 +183,7 @@ Behavior:
 - display 6 visible slots
 - allow add and remove actions
 - prevent adding more than 6 Pokemon
-- use `spriteUrl` for filled team slots
-- use plus-style empty slot visuals for unfilled slots
+- keep empty slots visible at all times
 
 ### Team Analysis
 
@@ -172,9 +200,9 @@ Behavior:
 - show weaknesses, resistances, immunities, role analysis, synergy notes, stat summary, and recommendations
 - show clear loading and error states
 
-## Running the frontend locally
+## Run the Frontend
 
-Use these commands from the scaffolded React app:
+Use these commands from `frontend/`:
 ```bash
 cd frontend
 npm install
@@ -186,7 +214,12 @@ Recommended local setup:
 2. Start the frontend development server from `frontend/`.
 3. Configure the frontend base API URL through an environment variable such as `VITE_API_BASE_URL=http://localhost:8080`.
 4. Keep the backend CORS allow-origin aligned with the frontend dev origin. The current local verification setup used `http://127.0.0.1:4173`.
-5. Use `spriteUrl` for search and team-slot views, and use `officialArtworkUrl` for polished detailed or analysis views with `spriteUrl` fallback.
+
+If you want to match the current verified local setup exactly:
+```bash
+cd frontend
+npm run dev -- --host 127.0.0.1 --port 4173
+```
 
 Verification commands:
 
@@ -197,23 +230,28 @@ npm test
 npm run build
 ```
 
-## API examples
+## Full Local Run Flow
 
-### Health
+1. Start the backend:
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
+2. Open Swagger UI if you want to test backend endpoints directly:
+   - `http://localhost:8080/swagger-ui.html`
+3. Start the frontend:
+   ```bash
+   cd frontend
+   npm run dev -- --host 127.0.0.1 --port 4173
+   ```
+4. Open the app:
+   - `http://127.0.0.1:4173`
+5. Test the user flows:
+   - search a Pokemon in Pokedex
+   - build a team in Team Builder
+   - analyze the team in Team Analysis
 
-Request:
-
-```http
-GET /api/health
-```
-
-Response:
-
-```json
-{
-  "status": "ok"
-}
-```
+## API Examples
 
 ### Pokemon lookup
 
@@ -288,7 +326,7 @@ Current backend behavior:
 - malformed JSON -> `400`
 - upstream PokeAPI failure -> `502`
 
-## Styling suggestion
+## Styling Suggestion
 
 Simple CSS is enough for this project. Material UI is optional, but not required.
 
@@ -298,15 +336,6 @@ Recommended styling approach:
 - use badge-style type labels
 - use a responsive grid for the 6 team slots
 - use official artwork for primary visuals and classic sprites as fallback visuals
-
-## Manual backend testing
-
-You can manually test the API with Postman or `curl`.
-
-Recommended checks:
-- `GET http://localhost:8080/api/health`
-- `GET http://localhost:8080/api/pokemon/pikachu`
-- `POST http://localhost:8080/api/team/analyze`
 
 ## Documentation
 

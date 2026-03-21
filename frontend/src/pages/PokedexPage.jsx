@@ -63,9 +63,8 @@ function PokedexPage() {
         <p className="eyebrow">Pokedex</p>
         <h2>Pokedex</h2>
         <p>
-          Search one Pokemon at a time through the backend API. Quick preview states use the
-          sprite-first image mode, while the detailed card prefers official artwork with
-          sprite fallback.
+          Look up one Pokemon at a time, scan the core details quickly, and open a cleaner profile
+          view with typing, abilities, and base stats.
         </p>
         <PokemonSearchForm
           name={values.name}
@@ -90,8 +89,7 @@ function PokedexPage() {
           <h3>No Pokemon matched "{lastSubmittedName || values.name.trim()}"</h3>
           <p>
             Try a species name like <code>pikachu</code>, <code>gengar</code>, or{' '}
-            <code>dragonite</code>. The backend normalizes names, but the Pokemon still needs to
-            exist in the live data source.
+            <code>dragonite</code>. Check the spelling and try another Pokemon.
           </p>
         </div>
       ) : null}
@@ -112,8 +110,8 @@ function PokedexPage() {
               <p className="eyebrow">Live Result</p>
               <h3>{pokemon.name}</h3>
               <p>
-                Quick previews stay compact and lively with the backend sprite URL. The detailed
-                profile below switches to official artwork when available.
+                Get a quick first look here, then scroll down for a fuller profile with abilities,
+                typing, and base stats.
               </p>
               <div className="type-badge-list">
                 {pokemon.types.map((type) => (
@@ -133,8 +131,7 @@ function PokedexPage() {
           <h3>{hasSearched ? 'Search again with another Pokemon name' : 'Search for any Pokemon'}</h3>
           <p>
             Start with a simple name like <code>pikachu</code>, <code>gengar</code>, or{' '}
-            <code>dragonite</code>. The backend remains authoritative for lookup validation and
-            final error messages.
+            <code>dragonite</code> to see typing, abilities, and base stats in one place.
           </p>
         </div>
       ) : null}

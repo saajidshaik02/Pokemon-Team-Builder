@@ -33,7 +33,7 @@ function PokemonSearchForm({
         </p>
       ) : (
         <p className="pokemon-search-form__hint">
-          The frontend calls the Spring Boot backend, which normalizes the name before lookup.
+          Try a species name like <code>pikachu</code>, <code>charizard</code>, or <code>garchomp</code>.
         </p>
       )}
     </form>

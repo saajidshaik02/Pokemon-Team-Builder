@@ -6,11 +6,9 @@ C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\po
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\package-info.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\RestClientConfig.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\WebCorsConfig.java
-C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\controller\HealthController.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\controller\PokemonController.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\controller\TeamController.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\dto\ErrorResponse.java
-C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\dto\HealthStatusResponse.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\dto\PokemonDetailsResponse.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\dto\PokemonStatsResponse.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\dto\RoleAnalysisResponse.java
@@ -30,7 +28,6 @@ C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\po
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\model\package-info.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\model\TypeEffectivenessChart.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\PokemonApplication.java
-C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\service\HealthService.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\service\PokemonService.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\service\TeamAnalysisService.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\service\TeamRecommendationService.java

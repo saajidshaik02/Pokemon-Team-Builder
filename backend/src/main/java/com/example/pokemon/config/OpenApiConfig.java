@@ -16,6 +16,6 @@ public class OpenApiConfig {
         return new OpenAPI().info(new Info()
                 .title("Pokemon Team Builder API")
                 .version("v1")
-                .description("Spring Boot API for health checks, single Pokemon lookup, and deterministic team analysis."));
+                .description("Spring Boot API for single Pokemon lookup and deterministic team analysis."));
     }
 }

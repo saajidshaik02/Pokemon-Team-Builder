@@ -1,4 +1,4 @@
-import heroImage from '../assets/hero.png'
+import heroImage from '../assets/pokeball.png'
 import { NavLink, Outlet } from 'react-router-dom'
 
 function AppShell() {
@@ -10,8 +10,8 @@ function AppShell() {
             <p className="eyebrow">Pokemon Team Analysis Tool</p>
             <h1>Build a team, surface the weak spots, and tighten the balance.</h1>
             <p className="brand-copy">
-              The React frontend stays compact and readable while the Spring Boot backend
-              remains the source of truth for Pokemon lookup and deterministic team analysis.
+              Explore Pokemon, shape a six-slot lineup, and get a clear read on the strengths,
+              gaps, and matchup pressure in your team.
             </p>
             <div className="brand-highlights" aria-label="Application highlights">
               <span className="brand-chip">Pokedex lookup</span>
@@ -43,8 +43,8 @@ function AppShell() {
       </main>
 
       <footer className="app-footer">
-        <span>Backend API base URL is configured through `VITE_API_BASE_URL`.</span>
-        <span>Sprites stay compact for quick views, while official artwork drives detailed views.</span>
+        <span>Search individual Pokemon, build a full team, and compare how the pieces fit together.</span>
+        <span>Quick views stay snappy, while detailed cards and summaries focus on cleaner artwork.</span>
       </footer>
     </div>
   )
