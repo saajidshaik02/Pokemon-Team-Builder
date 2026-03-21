@@ -617,3 +617,18 @@ Fix duplicate frontend dev-server startup by centralizing the frontend dev confi
 
 ### Next steps
 - No tracked implementation tasks remain
+
+## Session 26
+### Goal
+Clarify the Windows prerequisite setup in the README for Java 21 and Maven 3.9+.
+
+### Completed
+- Added a short Windows setup guide to the README for installing Java 21 and Maven 3.9+
+- Documented how to update `JAVA_HOME`, `MAVEN_HOME`, and `Path`
+- Added the basic verification commands for `java`, `javac`, and `mvn`
+
+### Decisions made
+- Keep prerequisite setup instructions brief and practical in the README instead of linking users out without local setup guidance
+
+### Next steps
+- No tracked implementation tasks remain

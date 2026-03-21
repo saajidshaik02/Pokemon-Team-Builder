@@ -100,6 +100,44 @@ Prerequisites:
 - Java 21 installed and available in `PATH`
 - Maven 3.9+ installed and available in `PATH`
 
+### Install Java 21 and Maven 3.9+ on Windows
+
+Java 21:
+1. Download a JDK 21 build from Oracle JDK, Eclipse Temurin, or Microsoft Build of OpenJDK.
+2. Install it to a folder such as `C:\Program Files\Eclipse Adoptium\jdk-21`.
+3. Add a `JAVA_HOME` environment variable that points to that JDK folder.
+4. Add `%JAVA_HOME%\bin` to your `Path`.
+
+Maven 3.9+:
+1. Download the Apache Maven 3.9.x binary zip from the Apache Maven website.
+2. Extract it to a folder such as `C:\Tools\apache-maven-3.9.11`.
+3. Add a `MAVEN_HOME` environment variable that points to that Maven folder.
+4. Add `%MAVEN_HOME%\bin` to your `Path`.
+
+How to update `Path` on Windows:
+1. Open Start and search for `Environment Variables`.
+2. Open `Edit the system environment variables`.
+3. Click `Environment Variables`.
+4. Add or update:
+   - `JAVA_HOME`
+   - `MAVEN_HOME`
+5. Edit `Path` and add:
+   - `%JAVA_HOME%\bin`
+   - `%MAVEN_HOME%\bin`
+6. Close and reopen PowerShell.
+
+Verify:
+
+```bash
+java -version
+javac -version
+mvn -version
+```
+
+Expected:
+- `java -version` shows Java 21
+- `mvn -version` shows Maven 3.9+ and a Java 21 runtime
+
 Run:
 
 ```bash
