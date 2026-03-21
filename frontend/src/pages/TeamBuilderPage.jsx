@@ -1,40 +1,113 @@
-import ImageLoader from '../components/common/ImageLoader.jsx'
-import { resolvePokemonImage } from '../api/imageUtils.js'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ErrorNotice from '../components/common/ErrorNotice.jsx'
+import AddPokemonForm from '../components/team/AddPokemonForm.jsx'
+import TeamSlotsGrid from '../components/team/TeamSlotsGrid.jsx'
+import TeamValidationMessage from '../components/team/TeamValidationMessage.jsx'
+import { getPokemonByName } from '../api/index.js'
+import useApi from '../hooks/useApi.js'
+import useFormState from '../hooks/useFormState.js'
 
-const teamSlots = [
-  {
-    name: 'charizard',
-    spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png',
-    officialArtworkUrl:
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png',
-  },
-  {
-    name: 'blastoise',
-    spriteUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png',
-    officialArtworkUrl:
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png',
-  },
-  null,
-  null,
-  null,
-  null,
-]
+const MAX_TEAM_SIZE = 6
 
 function TeamBuilderPage() {
+  const navigate = useNavigate()
+  const { values, updateValue, resetValues } = useFormState({ name: '' })
+  const [team, setTeam] = useState([])
+  const [validationMessage, setValidationMessage] = useState('')
+  const [validationTone, setValidationTone] = useState('warning')
+  const pokemonLookup = useApi(getPokemonByName)
+
+  async function handleAddPokemon(event) {
+    event.preventDefault()
+
+    const trimmedName = values.name.trim()
+    const normalizedName = trimmedName.toLowerCase()
+    pokemonLookup.setError(null)
+
+    if (!trimmedName) {
+      setValidationTone('warning')
+      setValidationMessage('Enter a Pokemon name before adding it to the team.')
+      return
+    }
+
+    if (team.length >= MAX_TEAM_SIZE) {
+      setValidationTone('warning')
+      setValidationMessage('Your team already has 6 Pokemon. Remove one before adding another.')
+      return
+    }
+
+    if (team.some((pokemon) => pokemon.name === normalizedName)) {
+      setValidationTone('error')
+      setValidationMessage('Duplicate Pokemon are not allowed in the current backend implementation.')
+      return
+    }
+
+    setValidationMessage('')
+
+    try {
+      const pokemon = await pokemonLookup.execute(trimmedName)
+      setTeam((currentTeam) => [
+        ...currentTeam,
+        {
+          id: pokemon.id,
+          name: pokemon.name,
+          types: pokemon.types,
+          spriteUrl: pokemon.spriteUrl,
+          officialArtworkUrl: pokemon.officialArtworkUrl,
+        },
+      ])
+      setValidationTone('success')
+      setValidationMessage(`${pokemon.name} added to the team.`)
+      resetValues({ name: '' })
+    } catch {
+      // Error state is surfaced through the shared error component below.
+    }
+  }
+
+  function handleNameChange(event) {
+    if (validationMessage) {
+      setValidationMessage('')
+    }
+    pokemonLookup.setError(null)
+    updateValue(event)
+  }
+
+  function handleRemovePokemon(indexToRemove) {
+    setTeam((currentTeam) => currentTeam.filter((_, index) => index !== indexToRemove))
+    pokemonLookup.setError(null)
+    setValidationTone('success')
+    setValidationMessage('Pokemon removed from the team.')
+  }
+
+  function handleAnalysisAction() {
+    navigate('/team-analysis', {
+      state: {
+        team,
+      },
+    })
+  }
+
   return (
-    <section className="page-grid">
-      <div className="section-card hero-card">
-        <p className="eyebrow">Route Ready</p>
+    <section className="page-grid page-grid--team-builder">
+      <div className="section-card hero-card team-builder-hero">
+        <p className="eyebrow">Team Builder</p>
         <h2>Team Builder</h2>
         <p>
-          The shell for team composition is in place. Phase 3 can focus on add or remove
-          actions, validation, and submission flow instead of bootstrapping.
+          Build a six-slot team locally by looking up Pokemon through the backend. The builder
+          keeps sprite-first visuals compact while preserving official artwork in state for the
+          next analysis phase.
         </p>
-        <ul className="feature-list">
-          <li>Six-slot layout prepared</li>
-          <li>Sprite-first image strategy documented for team slots</li>
-          <li>Room reserved for max-team and duplicate validation messages</li>
-        </ul>
+        <AddPokemonForm
+          name={values.name}
+          isSubmitting={pokemonLookup.isLoading}
+          onNameChange={handleNameChange}
+          onSubmit={handleAddPokemon}
+        />
+        <TeamValidationMessage message={validationMessage} tone={validationTone} />
+        {pokemonLookup.error ? (
+          <ErrorNotice title="Could not add Pokemon" message={pokemonLookup.error.message} />
+        ) : null}
       </div>
 
       <div className="section-card">
@@ -43,28 +116,45 @@ function TeamBuilderPage() {
             <p className="eyebrow">Sprite-First Team Slots</p>
             <h3>Current Team Layout</h3>
           </div>
-          <span className="pill-muted">2 / 6 Pokemon</span>
+          <span className="pill-muted">
+            {team.length} / {MAX_TEAM_SIZE} Pokemon
+          </span>
         </div>
 
-        <div className="slot-grid">
-          {teamSlots.map((pokemon, index) => (
-            <div className={`slot-card ${pokemon ? 'slot-card--filled' : ''}`} key={`slot-${index + 1}`}>
-              {pokemon ? (
-                <>
-                  <ImageLoader {...resolvePokemonImage(pokemon, 'sprite-first')} className="slot-image" />
-                  <strong>{pokemon.name}</strong>
-                </>
-              ) : (
-                <>
-                  <div className="slot-plus" aria-hidden="true">
-                    +
-                  </div>
-                  <span>Empty slot</span>
-                </>
-              )}
-            </div>
-          ))}
+        <p className="team-builder-summary">
+          Slot order is kept in local state so later analysis requests can submit the team in the
+          same order shown here.
+        </p>
+        {team.length === 0 ? (
+          <div className="empty-state-card empty-state-card--team-builder">
+            <p className="eyebrow">No Team Members Yet</p>
+            <h4>All six slots are open.</h4>
+            <p>
+              Start with a core Pokemon and build outward. The fixed six-slot grid stays visible so
+              team shape is always easy to scan.
+            </p>
+          </div>
+        ) : null}
+        <TeamSlotsGrid team={team} onRemovePokemon={handleRemovePokemon} />
+      </div>
+
+      <div className="section-card team-builder-action-card">
+        <div>
+          <p className="eyebrow">Next Step</p>
+          <h3>Analyze Team</h3>
+          <p>
+            Move directly into the analysis view with the current ordered team. The next page will
+            submit these names to the backend and reuse the cached image data for the summary.
+          </p>
         </div>
+        <button
+          type="button"
+          className="team-builder-action"
+          disabled={team.length === 0}
+          onClick={handleAnalysisAction}
+        >
+          Analyze Team
+        </button>
       </div>
     </section>
   )

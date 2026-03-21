@@ -15,6 +15,7 @@
 - Only the required Pokemon fields are used: id, name, types, abilities, base stats, `spriteUrl`, and `officialArtworkUrl`.
 - Pokemon image handling prefers official artwork when available and falls back to classic sprite URLs when official artwork is missing.
 - If PokeAPI is unavailable, the backend returns a clear client-facing error instead of failing silently.
+- The backend Pokemon DTO contract should expose both `spriteUrl` and `officialArtworkUrl` correctly from live PokeAPI responses, including the upstream `official-artwork` sprite key.
 
 ## Scope assumptions
 
@@ -39,7 +40,11 @@
 - The frontend will use simple local state and React hooks before introducing heavier state management.
 - Client-side validation is used for better UX, but backend validation remains authoritative.
 - The frontend should surface backend error messages directly when possible.
+- The frontend should normalize common backend and network failures into consistent user-facing error objects so `400`, `404`, `502`, and offline states render predictably.
 - The frontend should be responsive and mobile-friendly.
+- Responsive layout changes should usually stay in shared frontend styles, with page-level modifier classes used only when a route genuinely needs a distinct desktop composition.
+- When Team Analysis is opened without cached Team Builder state, the frontend may resolve summary image data through backend Pokemon lookups so the browser still never calls PokeAPI directly.
+- Frontend page components should prefer importing backend request helpers through one shared API entry module rather than reaching into many API files directly.
 
 ## UI assumptions
 
@@ -52,6 +57,7 @@
 - The team builder prevents the user from adding more than 6 Pokemon on the client.
 - The analysis view prioritizes weaknesses and recommendations visually over lower-priority sections.
 - The UI should provide visible feedback for image loading and backend error states.
+- Empty states should be explicit and helpful for missing search results, empty teams, and absent recommendations instead of relying only on generic error framing.
 
 ## Analysis assumptions
 
@@ -68,11 +74,13 @@
 - Java 21 and Spring Boot are used for the backend.
 - Maven is used as the backend build tool.
 - React is used for the frontend.
+- Vitest and Testing Library are used for frontend component and route tests.
 - Springdoc OpenAPI is used for backend API documentation and manual testing.
 - DTOs are used for backend API responses.
 - Raw PokeAPI responses are not exposed directly from controllers.
 - The codebase should remain small, modular, and easy to explain.
 - Client-facing backend errors follow a consistent JSON structure with `status`, `error`, `message`, `path`, and `timestamp`.
+- Frontend DTO normalization should preserve backend field names such as `officialArtworkUrl` and `spriteUrl` instead of renaming them again in the page layer.
 - Numeric analysis thresholds should live in named backend config or shared constants rather than as service-level magic numbers, with YAML preferred when they may need adjustment between review passes.
 
 ## Validation assumptions
@@ -92,6 +100,9 @@
 - The repository currently does not include a Maven wrapper script, so backend commands use the installed `mvn` binary.
 - Frontend local development will run from `frontend/` with Node.js and npm.
 - Frontend backend URLs should be configured through environment variables instead of hardcoded values.
+- Local browser-based frontend development assumes the backend allows the configured frontend origin through explicit CORS configuration rather than broad wildcard access.
+- Shared frontend request hooks should protect visible state from stale repeated lookup responses when users search quickly.
+- Frontend tests should prefer mocking the shared API entry module and asserting visible route or component behavior rather than coupling tests to lower-level HTTP details.
 - Postman should still be used for direct backend endpoint testing even after the frontend exists.
 
 ## Submission assumptions

@@ -26,12 +26,16 @@ Implemented now:
 - React Router setup for Pokedex, Team Builder, and Team Analysis
 - Axios API client setup and shared image utility
 - shared app shell, loading state, error notice, and image loader components
+- live Pokedex lookup flow with backend search, validation, sprite preview, artwork-first detail card, and image fallback handling
+- live Team Builder flow with backend-backed add lookup, fixed six-slot local state, sprite-first slots, and duplicate or max-size validation
+- live Team Analysis flow with backend submission, route-state handoff from Team Builder, sectioned result rendering, and backend-backed summary image resolution
+- centralized frontend API entrypoint and normalized frontend DTO handling for backend responses
+- stale-response protection for repeated Pokemon lookups in shared frontend request state
+- responsive frontend layout polish for mobile, tablet, and desktop with stronger empty-state and section hierarchy treatment
+- local backend CORS configuration for the frontend dev origin so browser-based full-stack runs work without proxying
 
 Planned next:
-- full Pokedex lookup interaction
-- full Team Builder interaction and validation
-- full Team Analysis rendering from live backend responses
-- additional frontend tests beyond Phase 1 setup verification
+- full-stack verification across the live backend and frontend together
 
 ## Scope
 
@@ -72,6 +76,8 @@ Frontend:
 - Vite
 - React Router
 - Axios
+- Vitest
+- Testing Library
 - CSS modules or scoped CSS files with shared design tokens
 
 ## Design inspiration
@@ -151,6 +157,7 @@ Responsible for:
 Responsible for:
 - outbound client setup and OpenAPI configuration
 - named backend heuristic thresholds that may need tuning across review passes
+- local frontend-origin CORS configuration for browser-based full-stack development
 
 ### DTO layer
 
@@ -204,6 +211,7 @@ frontend/
 docs/
   architecture.md
   assumptions.md
+  frontend-reference.md
   session-log.md
   tasks.md
 ```
@@ -298,6 +306,8 @@ Error payload shape:
 
 The frontend should consume this error format directly and surface the `message` value in user-facing error states.
 
+For local browser-based verification, the backend must also allow the configured frontend origin for `/api/**` requests.
+
 ## Frontend UI structure
 
 ### App shell
@@ -337,6 +347,7 @@ UX behavior:
 - display stats as values and progress bars
 - show abilities in a simple readable list
 - surface invalid-name errors near the search field
+- when a lookup returns no Pokemon, prefer a guided empty-state message over a generic failure block
 
 ### Team Builder view
 
@@ -362,6 +373,7 @@ UX behavior:
 - prevent adding more than 6 Pokemon on the client
 - show a clear message when the team is full
 - keep sprite thumbnails and names easy to scan in grid form
+- show an explicit empty-team helper message while the fixed grid is still completely unfilled
 
 ### Team Analysis view
 
@@ -380,6 +392,7 @@ Data flow:
 - frontend submits `pokemonNames` to `POST /api/team/analyze`
 - analysis response is stored in page state
 - team summary image state prefers cached `officialArtworkUrl` and falls back to cached `spriteUrl` using frontend-side team detail state
+- if the analysis page is opened directly without cached team detail state, it resolves summary images through backend Pokemon lookups rather than calling PokeAPI from the browser
 - each section receives only the relevant slice of the response
 - errors from invalid teams or upstream failures are shown in a shared error component
 
@@ -397,6 +410,7 @@ Recommended API helpers:
 - `getPokemonByName(name)`
 - `analyzeTeam(pokemonNames)`
 - `getHealthStatus()`
+- frontend pages should import backend request helpers through a shared API entry module so the page layer is not coupled to lower-level file layout
 
 Recommended image helper behavior:
 - `resolvePokemonImage(pokemon, mode)` should support at least `sprite-first` and `artwork-first` selection
@@ -408,6 +422,7 @@ Recommended state ownership:
 - `PokedexPage`: search term, Pokemon result, loading, error, image loading state
 - `TeamBuilderPage`: team array, validation message, slot image loading state
 - `TeamAnalysisPage`: submitted team, analysis result, loading, error, summary image loading state
+- route-level pages should avoid storing duplicated derived arrays when a lighter keyed visual cache plus derived presentational props is enough
 
 Recommended shared UI primitives:
 - `TypeBadge`
@@ -415,6 +430,26 @@ Recommended shared UI primitives:
 - `LoadingState`
 - `ErrorNotice`
 - `SectionCard`
+
+Recommended frontend integration rules:
+- normalize backend DTOs in the frontend API layer so component code reads a stable shape even when fields are missing
+- preserve backend DTO field names such as `officialArtworkUrl` and `spriteUrl` instead of inventing alternate frontend names
+- when repeated searches can overlap, shared request hooks should ignore stale earlier responses so the latest request owns visible state
+- keep optimistic UI limited to local clarity improvements such as immediate validation or local add/remove feedback, not fake successful backend outcomes
+- frontend page tests should generally mock the shared API entry module and assert user-visible states rather than unit-testing Axios details
+
+## Frontend testing approach
+
+Frontend tests now use:
+- Vitest as the test runner
+- Testing Library for rendering and interaction
+- `jsdom` for DOM-based component and route tests
+
+Recommended test boundaries:
+- use route tests to verify the main `App` navigation and redirects
+- use focused component tests for reusable form behavior such as `PokemonSearchForm`
+- use page tests for backend success, validation, and failure states by mocking the shared frontend API entry module
+- prefer `MemoryRouter`-based helpers over the browser entrypoint in frontend tests
 
 ## Styling guidance
 
@@ -427,6 +462,7 @@ Suggested visual rules:
 - use a 2-column layout on desktop and a single-column stack on mobile
 - keep interactive controls large enough for touch devices
 - keep contrast high and labels explicit
+- keep route pages thin by expressing responsive layout through page-level modifier classes while leaving most visual treatment in shared global styles
 
 ## Key design decisions
 
@@ -434,6 +470,7 @@ Suggested visual rules:
 - The frontend stays presentation-focused and should not duplicate backend business logic.
 - API contracts remain DTO-driven and explicit.
 - Analysis logic remains deterministic and explainable.
+- Local full-stack development should use explicit backend CORS configuration for the frontend dev origin rather than relying on broad wildcard origins.
 - Numeric heuristic thresholds should stay centralized in named backend config or shared constants rather than reintroduced as service-level magic numbers.
 - Review feedback that establishes a reusable engineering rule should be written into the repo markdowns so future tasks inherit it automatically.
 - No database, authentication, or persistence should be added unless requirements change.

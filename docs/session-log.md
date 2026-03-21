@@ -333,3 +333,207 @@ Perform a focused backend correction pass for analysis heuristics, threshold cle
 ### Follow-up update
 - Converted the centralized analysis thresholds from a Java constants class into YAML-backed `AnalysisProperties` so future tuning can happen through named config values
 - Added an explicit repo rule to document review feedback as markdown guidance when it should affect future work across the product
+
+## Session 13
+### Goal
+Implement Phase 2 of the frontend: the Pokedex lookup view.
+
+### Completed
+- Replaced the placeholder `PokedexPage` with a live backend-driven lookup flow
+- Added `PokemonSearchForm`, `PokemonCard`, `PokemonAbilitiesList`, `PokemonStatsPanel`, and `TypeBadge`
+- Added frontend blank-name validation before submit while leaving backend validation authoritative
+- Reused the backend lookup API helper and shared image resolver for sprite-first preview and artwork-first detail rendering
+- Reused `ImageLoader` so loading skeletons and broken-image fallback handling work for both preview and detailed views
+- Added empty, loading, success, and invalid-name error states for the Pokedex route
+- Updated frontend styles for the Pokedex search form, type badges, stat bars, and detailed Pokemon card
+- Verified the frontend with `npm run lint` and `npm run build`
+- Updated `docs/tasks.md` and `docs/architecture.md` to reflect the completed Phase 2 milestone
+
+### Decisions made
+- Keep the Pokedex state local to the route using the existing `useApi` and `useFormState` hooks
+- Keep quick lookup visuals sprite-first while reserving official artwork for the detailed card view
+- Treat the initial no-search screen as the explicit empty state for Phase 2 instead of inventing a separate backend-empty response
+
+### Next steps
+- Start Phase 3 with the Team Builder page and its local team-management flow
+- Add frontend tests for the Pokedex behavior in the later testing phase
+
+### Notes
+- Frontend lint and build needed to run outside the sandbox because Node hit a path permission error inside the sandbox
+
+## Session 14
+### Goal
+Implement Phase 3 of the frontend: the Team Builder view.
+
+### Completed
+- Replaced the placeholder `TeamBuilderPage` with a live local team-builder flow
+- Added `AddPokemonForm`, `TeamValidationMessage`, `TeamSlotsGrid`, `TeamSlotCard`, and `EmptyTeamSlot`
+- Reused the backend lookup API to add Pokemon into ordered local team state while preserving both `spriteUrl` and `officialArtworkUrl`
+- Added local validation for blank names, max-team size, and duplicate Pokemon using the same duplicate rule text the backend applies
+- Added add and remove actions, visible `0-6` team count summary, and a future analysis action that stays disabled until the team has at least one Pokemon
+- Reused `ImageLoader` and sprite-first image selection for slot-level loading and broken-image fallback handling
+- Updated frontend styles for Team Builder form, slot cards, remove actions, and validation messaging
+- Verified the frontend with `npm run lint` and `npm run build`
+- Updated `docs/tasks.md` and `docs/architecture.md` to reflect the completed Phase 3 milestone
+
+### Decisions made
+- Keep Team Builder state local to the route so slot order remains explicit and easy to pass into the later analysis flow
+- Use backend-backed Pokemon lookup for adding team members rather than storing partial placeholder entries
+- Mirror the backend duplicate-team rule in the Team Builder UI now, while leaving actual `POST /api/team/analyze` response handling for Phase 4
+
+### Next steps
+- Start Phase 4 with live team analysis submission and rendering
+- Add frontend tests for Team Builder behavior in the later testing phase
+
+### Notes
+- Frontend lint and build again needed to run outside the sandbox because Node hit a path permission error inside the sandbox
+
+## Session 15
+### Goal
+Implement Phase 4 of the frontend: the Team Analysis view.
+
+### Completed
+- Replaced the placeholder `TeamAnalysisPage` with a live backend-driven analysis flow
+- Added `TeamAnalysisForm`, `AnalysisSummaryPanel`, `TypeAnalysisSection`, `RoleAnalysisSection`, `StatSummarySection`, `RecommendationsSection`, `WeaknessList`, `ResistanceList`, and `ImmunityList`
+- Normalized the analysis response shape in the frontend API module before rendering it
+- Added empty, loading, success, and backend validation failure states for the Team Analysis route
+- Added route-state handoff from Team Builder so the current team can be analyzed directly without introducing global state
+- Reused cached `officialArtworkUrl` and `spriteUrl` from Team Builder when available, and resolved missing summary image data through backend Pokemon lookups when the page is used directly
+- Updated frontend styles for the Team Analysis form, summary panel, cards, chips, and section layouts
+- Verified the frontend with `npm run lint` and `npm run build`
+- Updated `docs/tasks.md`, `docs/architecture.md`, and `docs/assumptions.md` to reflect the completed Phase 4 milestone and the summary-image resolution rule
+
+### Decisions made
+- Support both direct analysis-page entry and Team Builder handoff instead of forcing one route to own all team submission
+- Keep analysis result state local to the Team Analysis route
+- Resolve missing summary images through backend lookup calls so the frontend still respects the backend-only PokeAPI boundary
+
+### Next steps
+- Move into Phase 5 for frontend state and integration cleanup only if the current route-level state starts to feel duplicated
+- Add frontend tests for Team Analysis behavior in the later testing phase
+
+### Notes
+- Frontend lint and build again needed to run outside the sandbox because Node hit a path permission error inside the sandbox
+
+## Session 16
+### Goal
+Implement Phase 5 of the frontend: state and backend-integration cleanup.
+
+### Completed
+- Added a shared frontend API entry module so page-level code imports backend requests through one surface
+- Normalized frontend backend-error handling for `400`, `404`, `502`, and network failures in the shared HTTP client
+- Normalized Pokemon lookup DTOs in the frontend API layer so `officialArtworkUrl` and `spriteUrl` remain aligned with backend field names
+- Added stale-response protection to the shared `useApi` hook and applied it to repeated Pokedex searches
+- Reduced duplicated derived Team Analysis route state by storing keyed visual data and deriving summary props for presentation
+- Updated the project docs and task checklist to record the new frontend API and request-state conventions
+- Verified the frontend with `npm run lint` and `npm run build`
+
+### Decisions made
+- Keep the frontend API layer split by feature internally, but expose page-facing imports through one shared entry module
+- Normalize backend DTOs at the API boundary instead of letting pages defend against partially missing fields repeatedly
+- Prefer stale-response protection in the shared request hook over adding more page-specific race-condition handling
+- Keep optimistic frontend behavior limited to local clarity improvements without masking backend validation or success states
+
+### Next steps
+- Move to Phase 6 for UI polish and responsiveness only after explicit approval
+- Add frontend tests for the shared request and route behavior in the later testing phase
+
+### Notes
+- Frontend lint and build again needed to run outside the sandbox because Node hit a path permission error inside the sandbox
+
+## Session 17
+### Goal
+Implement Phase 6 of the frontend: UI polish and responsiveness.
+
+### Completed
+- Refined the shared app shell so the header reflects the live product instead of the old Phase 1 scaffold copy
+- Polished the shared frontend styling with stronger card hierarchy, denser section framing, and more intentional sprite-versus-artwork presentation
+- Added responsive layout behavior for mobile, tablet, and desktop across the shell, forms, Team Builder flow, and Team Analysis flow
+- Added explicit empty-state messaging for no Pokemon search result, no team members yet, and no recommendations returned
+- Kept type-colored badges, image skeleton behavior, sprite-first quick views, and artwork-first detail views aligned with the earlier architecture decisions
+- Updated the project docs and task checklist to record the new responsive-layout and empty-state conventions
+- Verified the frontend with `npm run lint` and `npm run build`
+
+### Decisions made
+- Keep the main responsive styling logic centralized in `frontend/src/styles/globals.css` rather than scattering route-specific CSS files
+- Use lightweight page-level modifier classes only where a route needs a distinct desktop composition
+- Treat `404` Pokemon lookup results as a guided no-result empty state instead of rendering them exactly like generic backend failures
+- Keep Phase 6 presentation-only and avoid changing backend contracts or frontend API behavior
+
+### Next steps
+- Move to Phase 7 for frontend tests only after explicit approval
+- Add route and interaction coverage for the new empty-state rendering during the testing phase
+
+### Notes
+- Frontend lint and build again needed to run outside the sandbox because Node hit a path permission error inside the sandbox
+
+## Session 18
+### Goal
+Implement Phase 7 of the frontend: route, form, and API-state tests.
+
+### Completed
+- Added a Vitest plus Testing Library frontend test setup with `jsdom` and shared test initialization
+- Added route rendering coverage for the main app routes and unknown-route redirect behavior
+- Added focused `PokemonSearchForm` behavior tests
+- Added Pokedex page tests for blank-name validation, successful Pokemon lookup, and `404` no-result rendering
+- Added Team Builder tests for empty-slot rendering, blank validation, add or remove interactions, and max-team validation
+- Added Team Analysis tests for successful analysis rendering, backend failure rendering, and the empty-recommendations state
+- Updated the project docs and task checklist to record the frontend testing conventions
+- Verified the frontend with `npm run lint`, `npm test`, and `npm run build`
+
+### Decisions made
+- Use Vitest and Testing Library instead of introducing a heavier browser-based frontend test stack
+- Mock the shared frontend API entry module in page tests so test boundaries match the frontend architecture
+- Keep frontend tests user-visible and behavior-focused instead of coupling them to Axios internals
+- Add a shared memory-router render helper so route-aware tests stay concise
+
+### Next steps
+- Move to Phase 9 full-stack verification after explicit approval
+- Optionally expand test coverage later if new frontend state complexity is introduced
+
+### Notes
+- Initial frontend test package installation pulled Node-incompatible latest versions, so the test runner packages were pinned back to Node-compatible versions in this environment
+
+## Session 19
+### Goal
+Complete Phase 9 with live full-stack verification.
+
+### Completed
+- Started the backend and frontend locally and confirmed both were serving on their configured local ports
+- Verified `GET /api/health`, `GET /api/pokemon/pikachu`, and `POST /api/team/analyze` against the live backend while the frontend dev server was also running
+- Confirmed the backend returned the expected `400` validation payload for a team larger than 6 Pokemon
+- Added explicit backend CORS configuration for the frontend dev origin after the initial browser-style preflight check failed with `403`
+- Fixed live `officialArtworkUrl` deserialization from PokeAPI's `official-artwork` field and added a regression test for that upstream key mapping
+- Updated README, architecture, assumptions, and tasks to record the local full-stack verification conventions
+- Verified the backend with `mvn test` after the Phase 9 backend fixes
+
+### Decisions made
+- Treat local frontend-to-backend browser access as a first-class requirement and configure backend CORS explicitly instead of relying on same-origin assumptions
+- Keep the backend CORS rule narrow by using one named allowed origin from configuration
+- Add a deserialization-backed regression test for `officialArtworkUrl` because mapper-only fixture tests would not catch the upstream hyphenated sprite key mismatch
+
+### Next steps
+- No further implementation phases remain in `docs/tasks.md`
+- Optional future work is limited to maintenance or broader deployment concerns outside the current repo scope
+
+### Notes
+- The first runtime pass exposed two real integration issues: missing backend CORS for the frontend origin and incorrect deserialization of PokeAPI's `official-artwork` key
+
+## Session 20
+### Goal
+Finish the remaining documentation cleanup and add a concise frontend code reference.
+
+### Completed
+- Cleaned stale README wording so it reflects the implemented full-stack app instead of the older frontend-scaffold phase
+- Added `docs/frontend-reference.md` as a concise reference for frontend pages, API helpers, hooks, shared components, and testing conventions
+- Updated the docs index references so the new frontend reference is discoverable from the main project documentation
+
+### Decisions made
+- Keep the frontend reference lightweight and code-oriented rather than turning it into a second architecture spec
+- Document the most important frontend edit boundaries in one place so future work does not have to reconstruct them from scattered files
+
+### Next steps
+- No tracked implementation tasks remain
+
+### Notes
+- The frontend codebase still relies mostly on clear naming and structure rather than JSDoc-style inline documentation

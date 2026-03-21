@@ -1,3 +1,7 @@
+/**
+ * Resolves the primary and fallback image sources for a Pokemon.
+ * Use `sprite-first` for quick views and `artwork-first` for detail-heavy views.
+ */
 export function resolvePokemonImage(pokemon, mode = 'artwork-first') {
   if (!pokemon) {
     return { primarySrc: '', fallbackSrc: '', alt: 'Pokemon image unavailable' }

@@ -1,10 +1,10 @@
 # Pokemon Team Builder
 
-Pokemon Team Builder is a Pokemon team analysis project with:
-- a completed Spring Boot backend in `backend/`
-- a React frontend scaffold in `frontend/`
+Pokemon Team Builder is a full-stack Pokemon team analysis project with:
+- a Spring Boot backend in `backend/`
+- a React frontend in `frontend/`
 
-The backend already supports Pokemon lookup and team analysis through REST endpoints. The frontend Phase 1 setup is now in place with Vite, React Router, Axios, shared layout, and shared UI primitives.
+The application now supports live Pokemon lookup, six-slot team building, backend-driven team analysis, frontend testing, and local full-stack verification.
 
 ## Current status
 
@@ -16,22 +16,14 @@ Implemented now:
 - centralized backend heuristic thresholds for analysis rules
 - consistent JSON error handling
 - Springdoc OpenAPI docs for manual API testing
-
-Planned frontend views:
-- Pokedex
-- Team Builder
-- Team Analysis
-
-Current frontend setup includes:
-- Vite React scaffold
-- route-ready pages for Pokedex, Team Builder, and Team Analysis
-- Axios API helpers for backend requests
-- shared app shell, loading state, error notice, and image loader components
-- sprite-first and artwork-first image selection utility
+- Pokedex, Team Builder, and Team Analysis frontend routes
+- responsive frontend UI with sprite-first and artwork-first image handling
+- Vitest and Testing Library frontend coverage
+- local backend CORS support for browser-based frontend development
 
 ## UI direction
 
-The planned frontend takes inspiration from a few well-known Pokemon tools:
+The frontend takes inspiration from a few well-known Pokemon tools:
 - Pokemon Showdown teambuilder for fast team slot workflows
 - Pokemon Database Pokedex pages for readable single-Pokemon detail views
 - Serebii Pokedex pages for compact data grouping and stat presentation
@@ -46,7 +38,7 @@ The frontend should use those patterns in a lighter way:
 ```text
 backend/   Spring Boot API
 docs/      Architecture, assumptions, tasks, and session log
-frontend/  React frontend scaffold and Phase 1 setup
+frontend/  React frontend application
 ```
 
 ## Backend structure
@@ -85,16 +77,21 @@ mvn spring-boot:run
 
 The backend runs on `http://localhost:8080` by default.
 
+For local browser-based frontend use, the backend now allows one configured frontend origin through
+`pokemon.frontend.allowed-origin` in `backend/src/main/resources/application.yml`.
+
 API documentation:
 - Swagger UI: `http://localhost:8080/swagger-ui.html`
 - OpenAPI JSON: `http://localhost:8080/api-docs`
 
-## Planned frontend stack
+## Frontend stack
 
 - React
 - Vite
 - React Router
 - Axios
+- Vitest
+- Testing Library
 - CSS with shared design tokens and responsive layouts
 
 Vite is used because it provides a faster development server, lighter setup, and simpler build configuration for this project than older React scaffolds.
@@ -188,13 +185,15 @@ Recommended local setup:
 1. Start the backend on `http://localhost:8080`.
 2. Start the frontend development server from `frontend/`.
 3. Configure the frontend base API URL through an environment variable such as `VITE_API_BASE_URL=http://localhost:8080`.
-4. Use `spriteUrl` for search and team-slot views, and use `officialArtworkUrl` for polished detailed or analysis views with `spriteUrl` fallback.
+4. Keep the backend CORS allow-origin aligned with the frontend dev origin. The current local verification setup used `http://127.0.0.1:4173`.
+5. Use `spriteUrl` for search and team-slot views, and use `officialArtworkUrl` for polished detailed or analysis views with `spriteUrl` fallback.
 
 Verification commands:
 
 ```bash
 cd frontend
 npm run lint
+npm test
 npm run build
 ```
 
@@ -313,5 +312,6 @@ Recommended checks:
 
 - [Architecture](docs/architecture.md)
 - [Assumptions](docs/assumptions.md)
+- [Frontend Reference](docs/frontend-reference.md)
 - [Tasks](docs/tasks.md)
 - [Session Log](docs/session-log.md)

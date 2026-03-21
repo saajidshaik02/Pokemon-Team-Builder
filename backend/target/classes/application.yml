@@ -5,6 +5,8 @@ spring:
 pokemon:
   api:
     base-url: https://pokeapi.co/api/v2
+  frontend:
+    allowed-origin: http://127.0.0.1:4173
 
 analysis:
   type:

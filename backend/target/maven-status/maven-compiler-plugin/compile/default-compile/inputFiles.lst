@@ -5,6 +5,7 @@ C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\po
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\OpenApiConfig.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\package-info.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\RestClientConfig.java
+C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\config\WebCorsConfig.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\controller\HealthController.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\controller\PokemonController.java
 C:\Users\muham\Desktop\Pokemon-Team-Builder\backend\src\main\java\com\example\pokemon\controller\TeamController.java

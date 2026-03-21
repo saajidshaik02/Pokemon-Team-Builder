@@ -1,27 +1,49 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
-function useApi(apiFunction) {
+/**
+ * Shared request-state hook for route-level API calls.
+ * When `ignoreStaleResponses` is enabled, only the latest request is allowed to
+ * update visible state.
+ */
+function useApi(apiFunction, options = {}) {
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const latestRequestId = useRef(0)
+  const ignoreStaleResponses = options.ignoreStaleResponses ?? false
 
   const execute = useCallback(
     async (...args) => {
+      const requestId = latestRequestId.current + 1
+      latestRequestId.current = requestId
       setIsLoading(true)
       setError(null)
 
       try {
         const result = await apiFunction(...args)
-        setData(result)
+
+        if (!ignoreStaleResponses || requestId === latestRequestId.current) {
+          setData(result)
+        }
+
         return result
       } catch (apiError) {
-        setError(apiError)
+        if (!ignoreStaleResponses || requestId === latestRequestId.current) {
+          setError(apiError)
+        }
+
+        if (ignoreStaleResponses && requestId !== latestRequestId.current) {
+          throw { ...apiError, isStale: true }
+        }
+
         throw apiError
       } finally {
-        setIsLoading(false)
+        if (!ignoreStaleResponses || requestId === latestRequestId.current) {
+          setIsLoading(false)
+        }
       }
     },
-    [apiFunction],
+    [apiFunction, ignoreStaleResponses],
   )
 
   return {

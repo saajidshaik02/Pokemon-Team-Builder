@@ -1,5 +1,9 @@
 import { useState } from 'react'
 
+/**
+ * Small controlled-form helper used across pages and form components.
+ * Accepts either an input event or an explicit `name, value` pair in `updateValue`.
+ */
 function useFormState(initialState) {
   const [values, setValues] = useState(initialState)
 

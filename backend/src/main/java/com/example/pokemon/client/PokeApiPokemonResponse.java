@@ -1,5 +1,6 @@
 package com.example.pokemon.client;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
@@ -72,7 +73,7 @@ public record PokeApiPokemonResponse(
      * @param official_artwork official artwork payload
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record OtherSprites(OfficialArtwork official_artwork) {
+    public record OtherSprites(@JsonProperty("official-artwork") OfficialArtwork official_artwork) {
     }
 
     /**

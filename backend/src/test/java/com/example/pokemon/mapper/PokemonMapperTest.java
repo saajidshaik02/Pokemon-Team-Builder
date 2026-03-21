@@ -2,6 +2,7 @@ package com.example.pokemon.mapper;
 
 import com.example.pokemon.client.PokeApiPokemonResponse;
 import com.example.pokemon.dto.PokemonDetailsResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PokemonMapperTest {
 
     private final PokemonMapper pokemonMapper = new PokemonMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void shouldMapPokeApiResponseToPokemonResponse() {
@@ -51,5 +53,33 @@ class PokemonMapperTest {
         assertEquals(109, mapped.stats().specialAttack());
         assertEquals("https://example.test/charizard-artwork.png", mapped.officialArtworkUrl());
         assertEquals("https://example.test/charizard.png", mapped.spriteUrl());
+    }
+
+    @Test
+    void shouldDeserializeOfficialArtworkFromUpstreamHyphenatedKey() throws Exception {
+        String responseJson = """
+                {
+                  "id": 25,
+                  "name": "pikachu",
+                  "types": [],
+                  "abilities": [],
+                  "stats": [],
+                  "sprites": {
+                    "front_default": "https://example.test/pikachu.png",
+                    "other": {
+                      "official-artwork": {
+                        "front_default": "https://example.test/pikachu-artwork.png"
+                      }
+                    }
+                  }
+                }
+                """;
+
+        PokeApiPokemonResponse response = objectMapper.readValue(responseJson, PokeApiPokemonResponse.class);
+
+        PokemonDetailsResponse mapped = pokemonMapper.toPokemonResponse(response);
+
+        assertEquals("https://example.test/pikachu-artwork.png", mapped.officialArtworkUrl());
+        assertEquals("https://example.test/pikachu.png", mapped.spriteUrl());
     }
 }

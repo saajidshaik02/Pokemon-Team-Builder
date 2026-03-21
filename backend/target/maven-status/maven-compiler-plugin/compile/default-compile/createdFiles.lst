@@ -37,6 +37,7 @@ com\example\pokemon\config\OpenApiConfig.class
 com\example\pokemon\config\RestClientConfig.class
 com\example\pokemon\dto\HealthStatusResponse.class
 com\example\pokemon\model\package-info.class
+com\example\pokemon\config\WebCorsConfig.class
 com\example\pokemon\PokemonApplication.class
 com\example\pokemon\service\TeamRoleAnalysisService.class
 com\example\pokemon\client\PokeApiPokemonResponse$AbilitySlot.class
