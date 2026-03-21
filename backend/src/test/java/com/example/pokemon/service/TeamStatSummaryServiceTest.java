@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TeamStatSummaryServiceTest {
 
-    private final TeamStatSummaryService teamStatSummaryService = new TeamStatSummaryService();
+    private final TeamStatSummaryService teamStatSummaryService =
+            new TeamStatSummaryService(new com.example.pokemon.config.AnalysisProperties());
 
     @Test
     void shouldSummarizeTotalsAveragesStrengthsAndWeaknesses() {

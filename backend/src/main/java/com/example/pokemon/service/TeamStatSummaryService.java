@@ -2,6 +2,7 @@ package com.example.pokemon.service;
 
 import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.dto.StatSummaryResponse;
+import com.example.pokemon.config.AnalysisProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +16,12 @@ import java.util.List;
  */
 @Service
 public class TeamStatSummaryService {
+
+    private final AnalysisProperties analysisProperties;
+
+    public TeamStatSummaryService(AnalysisProperties analysisProperties) {
+        this.analysisProperties = analysisProperties;
+    }
 
     /**
      * Builds a stat summary for a resolved team.
@@ -86,25 +93,27 @@ public class TeamStatSummaryService {
             int averageSpecialDefense,
             int averageSpeed
     ) {
+        AnalysisProperties.StatSummary thresholds = analysisProperties.getStatSummary();
         List<String> strengths = new ArrayList<>();
 
-        if (averageSpeed >= 90) {
+        if (averageSpeed >= thresholds.getStrongSpeedAverage()) {
             strengths.add("team has strong average speed");
         }
 
-        if (averageAttack >= 95) {
+        if (averageAttack >= thresholds.getStrongAttackAverage()) {
             strengths.add("team has strong physical pressure");
         }
 
-        if (averageSpecialAttack >= 95) {
+        if (averageSpecialAttack >= thresholds.getStrongSpecialAttackAverage()) {
             strengths.add("team has strong special pressure");
         }
 
-        if (averageHp >= 90) {
+        if (averageHp >= thresholds.getStrongHpAverage()) {
             strengths.add("team has solid overall HP");
         }
 
-        if (averageDefense >= 85 && averageSpecialDefense >= 85) {
+        if (averageDefense >= thresholds.getStrongDefenseAverage()
+                && averageSpecialDefense >= thresholds.getStrongDefenseAverage()) {
             strengths.add("team has balanced defensive stats");
         }
 
@@ -130,25 +139,27 @@ public class TeamStatSummaryService {
             int averageSpecialDefense,
             int averageSpeed
     ) {
+        AnalysisProperties.StatSummary thresholds = analysisProperties.getStatSummary();
         List<String> weaknesses = new ArrayList<>();
 
-        if (averageSpeed < 80) {
+        if (averageSpeed < thresholds.getLowSpeedAverage()) {
             weaknesses.add("team lacks average speed");
         }
 
-        if (averageDefense < 75) {
+        if (averageDefense < thresholds.getLowDefenseAverage()) {
             weaknesses.add("team is light on physical defense");
         }
 
-        if (averageSpecialDefense < 75) {
+        if (averageSpecialDefense < thresholds.getLowDefenseAverage()) {
             weaknesses.add("team is light on special defense");
         }
 
-        if (averageHp < 75) {
+        if (averageHp < thresholds.getLowDefenseAverage()) {
             weaknesses.add("team has low average HP");
         }
 
-        if (averageAttack < 80 && averageSpecialAttack < 80) {
+        if (averageAttack < thresholds.getLowAttackAverage()
+                && averageSpecialAttack < thresholds.getLowAttackAverage()) {
             weaknesses.add("team lacks strong attacking stats");
         }
 

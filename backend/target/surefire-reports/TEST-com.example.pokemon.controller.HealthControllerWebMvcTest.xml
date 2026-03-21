@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.pokemon.controller.TeamControllerTest" time="0.286" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.pokemon.controller.HealthControllerWebMvcTest" time="2.515" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -65,9 +65,9 @@
     <property name="java.class.version" value="65.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[pokemon-backend] "/>
   </properties>
-  <testcase name="shouldReturnClearErrorForInvalidJson" classname="com.example.pokemon.controller.TeamControllerTest" time="0.044">
-    <system-out><![CDATA[2026-03-21T22:01:48.817+08:00  INFO 24124 --- [pokemon-backend] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.pokemon.controller.TeamControllerTest]: TeamControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-03-21T22:01:48.828+08:00  INFO 24124 --- [pokemon-backend] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.pokemon.PokemonApplication for test class com.example.pokemon.controller.TeamControllerTest
+  <testcase name="shouldReturnOkHealthStatus" classname="com.example.pokemon.controller.HealthControllerWebMvcTest" time="0.205">
+    <system-out><![CDATA[22:01:45.922 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.pokemon.controller.HealthControllerWebMvcTest]: HealthControllerWebMvcTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:01:46.080 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.pokemon.PokemonApplication for test class com.example.pokemon.controller.HealthControllerWebMvcTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -78,14 +78,19 @@
 
  :: Spring Boot ::                (v3.4.4)
 
-2026-03-21T22:01:48.855+08:00  INFO 24124 --- [pokemon-backend] [           main] c.e.p.controller.TeamControllerTest      : Starting TeamControllerTest using Java 21.0.10 with PID 24124 (started by muham in C:\Users\muham\Desktop\Pokemon-Team-Builder\backend)
-2026-03-21T22:01:48.855+08:00  INFO 24124 --- [pokemon-backend] [           main] c.e.p.controller.TeamControllerTest      : No active profile set, falling back to 1 default profile: "default"
-2026-03-21T22:01:48.984+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
-2026-03-21T22:01:49.016+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-03-21T22:01:49.016+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-03-21T22:01:49.017+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-03-21T22:01:49.023+08:00  INFO 24124 --- [pokemon-backend] [           main] c.e.p.controller.TeamControllerTest      : Started TeamControllerTest in 0.192 seconds (process running for 3.699)
+2026-03-21T22:01:46.492+08:00  INFO 24124 --- [pokemon-backend] [           main] c.e.p.c.HealthControllerWebMvcTest       : Starting HealthControllerWebMvcTest using Java 21.0.10 with PID 24124 (started by muham in C:\Users\muham\Desktop\Pokemon-Team-Builder\backend)
+2026-03-21T22:01:46.494+08:00  INFO 24124 --- [pokemon-backend] [           main] c.e.p.c.HealthControllerWebMvcTest       : No active profile set, falling back to 1 default profile: "default"
+2026-03-21T22:01:47.781+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-03-21T22:01:48.068+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-03-21T22:01:48.068+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-03-21T22:01:48.072+08:00  INFO 24124 --- [pokemon-backend] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-03-21T22:01:48.099+08:00  INFO 24124 --- [pokemon-backend] [           main] c.e.p.c.HealthControllerWebMvcTest       : Started HealthControllerWebMvcTest in 1.965 seconds (process running for 2.776)
 ]]></system-out>
+    <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\muham\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
   </testcase>
-  <testcase name="shouldReturnTeamAnalysis" classname="com.example.pokemon.controller.TeamControllerTest" time="0.03"/>
 </testsuite>

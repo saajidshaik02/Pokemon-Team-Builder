@@ -26,6 +26,12 @@ Documentation alignment:
 - [x] Update `README.md` with current backend status and frontend integration plan
 - [x] Update `docs/session-log.md` with the documentation review session
 
+Backend maintenance:
+- [x] Refactor role classification to use relative stat distribution heuristics instead of only flat raw-stat thresholds
+- [x] Centralize backend analysis threshold constants to remove service-level magic numbers in the impacted analysis services
+- [x] Replace `HealthControllerTest.java` with a focused Web MVC health endpoint test
+- [x] Add Swagger or OpenAPI support for manual backend API testing
+
 ## Phase 1: Frontend planning and setup
 
 - [x] Create a React app under `frontend/`

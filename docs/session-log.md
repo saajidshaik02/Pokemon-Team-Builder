@@ -305,3 +305,31 @@ Implement Frontend Phase 1 and verify the scaffold locally.
 
 ### Notes
 - `npm create vite@latest` and dependency installation required running outside the sandbox because npm registry access is restricted there
+
+## Session 12
+### Goal
+Perform a focused backend correction pass for analysis heuristics, threshold cleanup, and API documentation.
+
+### Completed
+- Refactored role classification to use relative stat distribution shares across offense, bulk, and speed instead of only flat raw-stat cutoffs
+- Centralized backend heuristic thresholds in `AnalysisThresholds` so role, type, stat-summary, and recommendation services no longer rely on scattered magic numbers
+- Replaced `HealthControllerTest.java` with a narrower `HealthControllerWebMvcTest.java` to keep useful endpoint coverage without the heavier full-context test
+- Added Springdoc OpenAPI support, controller endpoint annotations, and explicit `/swagger-ui.html` and `/api-docs` paths for manual API testing
+- Updated repo documentation to record the new threshold-centralization and API-documentation conventions
+- Verified the backend with `mvn test`
+
+### Decisions made
+- Keep heuristic thresholds in shared backend constants rather than YAML because these values are deterministic code rules, not deployment-specific configuration
+- Keep the role categories unchanged while improving how the service chooses between them
+- Keep health endpoint coverage, but align it with the lighter Web MVC test style already used for the other controllers
+
+### Next steps
+- Optionally add DTO-level OpenAPI examples if richer Swagger payload examples become useful during frontend implementation
+- Revisit remaining Spring Boot test deprecation warnings around `@MockBean` in a separate maintenance pass if they become urgent
+
+### Notes
+- Maven test execution required running outside the sandbox because the sandbox-local Maven repository path was not writable
+
+### Follow-up update
+- Converted the centralized analysis thresholds from a Java constants class into YAML-backed `AnalysisProperties` so future tuning can happen through named config values
+- Added an explicit repo rule to document review feedback as markdown guidance when it should affect future work across the product

@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TeamTypeAnalysisServiceTest {
 
-    private final TeamTypeAnalysisService teamTypeAnalysisService = new TeamTypeAnalysisService();
+    private final TeamTypeAnalysisService teamTypeAnalysisService =
+            new TeamTypeAnalysisService(new com.example.pokemon.config.AnalysisProperties());
 
     @Test
     void shouldAggregateWeaknessesResistancesAndImmunities() {

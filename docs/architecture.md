@@ -19,6 +19,8 @@ Implemented now:
 - single Pokemon lookup endpoint
 - team analysis endpoint
 - type, role, stat, and recommendation logic
+- centralized backend analysis thresholds for role, stat, recommendation, and type heuristics
+- OpenAPI or Swagger support for manual backend testing
 - backend tests for controllers, services, and mappers
 - React frontend scaffold under `frontend/`
 - React Router setup for Pokedex, Team Builder, and Team Analysis
@@ -144,6 +146,12 @@ Responsible for:
 Responsible for:
 - internal analysis support structures such as the type-effectiveness chart
 
+### Config layer
+
+Responsible for:
+- outbound client setup and OpenAPI configuration
+- named backend heuristic thresholds that may need tuning across review passes
+
 ### DTO layer
 
 Responsible for:
@@ -203,6 +211,10 @@ docs/
 The `frontend/` structure above now exists in the repository as the Phase 1 scaffold.
 
 ## Backend API contract
+
+Manual API docs are exposed through Springdoc:
+- Swagger UI: `/swagger-ui.html`
+- OpenAPI JSON: `/api-docs`
 
 ### Health check
 
@@ -422,6 +434,8 @@ Suggested visual rules:
 - The frontend stays presentation-focused and should not duplicate backend business logic.
 - API contracts remain DTO-driven and explicit.
 - Analysis logic remains deterministic and explainable.
+- Numeric heuristic thresholds should stay centralized in named backend config or shared constants rather than reintroduced as service-level magic numbers.
+- Review feedback that establishes a reusable engineering rule should be written into the repo markdowns so future tasks inherit it automatically.
 - No database, authentication, or persistence should be added unless requirements change.
 
 ## Success criteria

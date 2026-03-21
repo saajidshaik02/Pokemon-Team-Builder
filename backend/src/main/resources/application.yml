@@ -5,3 +5,42 @@ spring:
 pokemon:
   api:
     base-url: https://pokeapi.co/api/v2
+
+analysis:
+  type:
+    shared-weakness-count: 2
+    major-weakness-count: 3
+    comfortable-coverage-count: 2
+  stat-summary:
+    strong-speed-average: 90
+    strong-attack-average: 95
+    strong-special-attack-average: 95
+    strong-hp-average: 90
+    strong-defense-average: 85
+    low-speed-average: 80
+    low-defense-average: 75
+    low-attack-average: 80
+  role:
+    fast-attacker-min-speed-share: 0.19
+    fast-attacker-min-offense-share: 0.30
+    mixed-attacker-min-offense-share: 0.34
+    mixed-attacker-min-split-share: 0.43
+    mixed-attacker-max-split-gap: 0.12
+    defensive-wall-min-bulk-share: 0.55
+    defensive-wall-max-offense-share: 0.32
+    attacker-min-offense-share: 0.28
+    dominant-split-share: 0.58
+    balanced-attacker-min-offense-share: 0.33
+    bulky-support-min-bulk-share: 0.50
+    min-offensive-lean-count: 2
+    max-off-role-members-for-lean: 1
+    min-fast-attackers: 1
+    min-defensive-backbone: 1
+  recommendation:
+    recommended-offensive-overload-count: 3
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

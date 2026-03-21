@@ -4,6 +4,7 @@ import com.example.pokemon.dto.PokemonDetailsResponse;
 import com.example.pokemon.dto.TypeAnalysisResponse;
 import com.example.pokemon.dto.TypeCoverageResponse;
 import com.example.pokemon.dto.WeaknessResponse;
+import com.example.pokemon.config.AnalysisProperties;
 import com.example.pokemon.model.TypeEffectivenessChart;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,12 @@ import java.util.List;
 @Service
 public class TeamTypeAnalysisService {
 
+    private final AnalysisProperties analysisProperties;
+
+    public TeamTypeAnalysisService(AnalysisProperties analysisProperties) {
+        this.analysisProperties = analysisProperties;
+    }
+
     /**
      * Produces matchup analysis for a resolved Pokemon team.
      *
@@ -28,6 +35,7 @@ public class TeamTypeAnalysisService {
      * @return structured type analysis including weaknesses, resistances, immunities, and synergy notes
      */
     public TypeAnalysisResponse analyze(List<PokemonDetailsResponse> team) {
+        AnalysisProperties.Type typeThresholds = analysisProperties.getType();
         List<WeaknessResponse> weaknesses = new ArrayList<>();
         List<TypeCoverageResponse> resistances = new ArrayList<>();
         List<TypeCoverageResponse> immunities = new ArrayList<>();
@@ -67,7 +75,7 @@ public class TeamTypeAnalysisService {
                         determineSeverity(weakPokemon.size(), coveringPokemon.isEmpty())
                 ));
 
-                if (weakPokemon.size() >= 2 && !coveringPokemon.isEmpty()) {
+                if (weakPokemon.size() >= typeThresholds.getSharedWeaknessCount() && !coveringPokemon.isEmpty()) {
                     synergyNotes.add(attackType + " pressure can be covered by " + String.join(", ", coveringPokemon));
                 }
             }
@@ -80,7 +88,8 @@ public class TeamTypeAnalysisService {
                 immunities.add(new TypeCoverageResponse(attackType, immunePokemon));
             }
 
-            if (weakPokemon.isEmpty() && resistingPokemon.size() + immunePokemon.size() >= 2) {
+            if (weakPokemon.isEmpty()
+                    && resistingPokemon.size() + immunePokemon.size() >= typeThresholds.getComfortableCoverageCount()) {
                 synergyNotes.add("team is comfortable into " + attackType + " attacks");
             }
         }
@@ -104,15 +113,17 @@ public class TeamTypeAnalysisService {
      * @return the severity label used in the type analysis response
      */
     private String determineSeverity(int weakCount, boolean noCoverage) {
-        if (weakCount >= 3) {
+        AnalysisProperties.Type typeThresholds = analysisProperties.getType();
+
+        if (weakCount >= typeThresholds.getMajorWeaknessCount()) {
             return "major weakness";
         }
 
-        if (weakCount >= 2 && noCoverage) {
+        if (weakCount >= typeThresholds.getSharedWeaknessCount() && noCoverage) {
             return "coverage concern";
         }
 
-        if (weakCount >= 2) {
+        if (weakCount >= typeThresholds.getSharedWeaknessCount()) {
             return "shared weakness";
         }
 

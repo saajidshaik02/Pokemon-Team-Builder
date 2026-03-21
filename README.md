@@ -13,7 +13,9 @@ Implemented now:
 - `GET /api/pokemon/{name}`
 - `POST /api/team/analyze`
 - deterministic type, role, stat, and recommendation analysis
+- centralized backend heuristic thresholds for analysis rules
 - consistent JSON error handling
+- Springdoc OpenAPI docs for manual API testing
 
 Planned frontend views:
 - Pokedex
@@ -82,6 +84,10 @@ mvn spring-boot:run
 ```
 
 The backend runs on `http://localhost:8080` by default.
+
+API documentation:
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/api-docs`
 
 ## Planned frontend stack
 

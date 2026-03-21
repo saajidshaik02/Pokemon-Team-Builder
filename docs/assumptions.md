@@ -57,19 +57,23 @@
 
 - Type analysis uses simple type-effectiveness rules.
 - Role classification uses base-stat heuristics only.
+- Role classification should compare relative stat distribution shares rather than depend only on flat raw-stat cutoffs.
 - Stat summary uses simple totals, averages, and threshold-based strength or weakness notes.
 - Recommendations are deterministic and rule-based.
 - Recommendations do not need to be competitively optimal; they need to be reasonable and explainable.
+- Long-lived numeric analysis thresholds should be named and stored in backend configuration when they may need tuning over time.
 
 ## Technical assumptions
 
 - Java 21 and Spring Boot are used for the backend.
 - Maven is used as the backend build tool.
 - React is used for the frontend.
+- Springdoc OpenAPI is used for backend API documentation and manual testing.
 - DTOs are used for backend API responses.
 - Raw PokeAPI responses are not exposed directly from controllers.
 - The codebase should remain small, modular, and easy to explain.
 - Client-facing backend errors follow a consistent JSON structure with `status`, `error`, `message`, `path`, and `timestamp`.
+- Numeric analysis thresholds should live in named backend config or shared constants rather than as service-level magic numbers, with YAML preferred when they may need adjustment between review passes.
 
 ## Validation assumptions
 

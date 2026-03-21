@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TeamRoleAnalysisServiceTest {
 
-    private final TeamRoleAnalysisService teamRoleAnalysisService = new TeamRoleAnalysisService();
+    private final TeamRoleAnalysisService teamRoleAnalysisService =
+            new TeamRoleAnalysisService(new com.example.pokemon.config.AnalysisProperties());
 
     @Test
     void shouldClassifyRolesAndDetectImbalance() {
@@ -29,6 +30,19 @@ class TeamRoleAnalysisServiceTest {
         assertEquals("defensive wall", response.roles().get("blissey"));
         assertTrue(response.summary().contains("team has at least one fast attacker"));
         assertTrue(response.summary().contains("team has some defensive backbone"));
+    }
+
+    @Test
+    void shouldUseRelativeStatDistributionForLowTotalPokemon() {
+        List<PokemonDetailsResponse> team = List.of(
+                pokemon("abra", List.of("psychic"), 20, 105, 90, 25, 15, 55),
+                pokemon("infernape", List.of("fire", "fighting"), 104, 104, 108, 76, 71, 71)
+        );
+
+        RoleAnalysisResponse response = teamRoleAnalysisService.analyze(team);
+
+        assertEquals("fast attacker", response.roles().get("abra"));
+        assertEquals("mixed attacker", response.roles().get("infernape"));
     }
 
     private PokemonDetailsResponse pokemon(

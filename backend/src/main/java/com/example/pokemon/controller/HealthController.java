@@ -2,6 +2,9 @@ package com.example.pokemon.controller;
 
 import com.example.pokemon.dto.HealthStatusResponse;
 import com.example.pokemon.service.HealthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/health")
+@Tag(name = "Health", description = "Health and smoke-test endpoints")
 public class HealthController {
 
     private final HealthService healthService;
@@ -33,6 +37,8 @@ public class HealthController {
      * @return a small DTO describing the API status
      */
     @GetMapping
+    @Operation(summary = "Get backend health", description = "Returns a lightweight backend health payload for smoke testing.")
+    @ApiResponse(responseCode = "200", description = "Backend is available")
     public HealthStatusResponse getHealth() {
         return healthService.getHealth();
     }
