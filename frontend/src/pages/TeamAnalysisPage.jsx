@@ -73,14 +73,12 @@ function TeamAnalysisPage() {
   const { values, updateValue, setValues } = useFormState({ teamInput: initialInput })
   const [validationMessage, setValidationMessage] = useState('')
   const [teamVisualsByName, setTeamVisualsByName] = useState(() => buildTeamVisualsMap(initialRouteTeam))
-  const [hasAttemptedAnalysis, setHasAttemptedAnalysis] = useState(initialRouteTeam.length > 0)
   const [isResolvingSummary, setIsResolvingSummary] = useState(false)
   const analysisRequest = useApi(analyzeTeam)
   const autoSubmittedLocationKey = useRef(null)
 
   const submitTeamAnalysis = useCallback(async (teamInput, cachedTeam = []) => {
     const pokemonNames = parsePokemonNames(teamInput)
-    setHasAttemptedAnalysis(true)
 
     if (pokemonNames.length === 0) {
       analysisRequest.setData(null)
@@ -181,21 +179,6 @@ function TeamAnalysisPage() {
           <StatSummarySection statSummary={analysisRequest.data.statSummary} />
           <RecommendationsSection recommendations={analysisRequest.data.recommendations} />
         </>
-      ) : null}
-
-      {!isLoading && !analysisRequest.data && !analysisRequest.error && !validationMessage ? (
-        <div className="section-card empty-state-card analysis-empty-state">
-          <p className="eyebrow">{hasAttemptedAnalysis ? 'No Result' : 'Empty State'}</p>
-          <h3>
-            {hasAttemptedAnalysis
-              ? 'Try another combination of Pokemon names'
-              : 'Analyze a team from scratch or from the builder'}
-          </h3>
-          <p>
-            Enter Pokemon names separated by commas or line breaks, or bring a lineup over from
-            the Team Builder.
-          </p>
-        </div>
       ) : null}
     </section>
   )

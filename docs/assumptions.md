@@ -99,11 +99,12 @@
 - Backend local development runs from `backend/` with Maven.
 - The repository currently does not include a Maven wrapper script, so backend commands use the installed `mvn` binary.
 - Frontend local development will run from `frontend/` with Node.js and npm.
+- Frontend local development should use one configured dev-server workflow on `127.0.0.1:4173`, with host, port, and `strictPort` centralized in `frontend/vite.config.js` rather than repeated ad hoc on multiple commands.
 - Frontend backend URLs should be configured through environment variables instead of hardcoded values.
 - Local browser-based frontend development assumes the backend allows the configured frontend origin through explicit CORS configuration rather than broad wildcard access.
 - Shared frontend request hooks should protect visible state from stale repeated lookup responses when users search quickly.
 - Frontend tests should prefer mocking the shared API entry module and asserting visible route or component behavior rather than coupling tests to lower-level HTTP details.
-- Postman should still be used for direct backend endpoint testing even after the frontend exists.
+- Swagger UI should be the primary documented path for direct backend endpoint testing.
 
 ## Submission assumptions
 

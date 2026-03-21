@@ -565,3 +565,55 @@ Replace the frontend header hero image with the pokeball asset and remove the ol
 
 ### Next steps
 - No tracked implementation tasks remain
+
+## Session 23
+### Goal
+Add a one-command local startup path for the backend and frontend together.
+
+### Completed
+- Added a root `start-dev.ps1` script that launches the backend and frontend in separate PowerShell windows
+- Added a root `start-dev.cmd` wrapper so Windows users can start both sides from the repo root with one command
+- Updated the README to document the new single-command flow and the optional `-SkipInstall` flag
+
+### Decisions made
+- Use a native Windows script instead of introducing a new root package manager setup or process-runner dependency
+- Keep the startup command aligned with the repo's verified local frontend origin `http://127.0.0.1:4173`
+
+### Next steps
+- No tracked implementation tasks remain
+
+## Session 24
+### Goal
+Refine the root startup script so it avoids duplicate dev servers and opens the app automatically.
+
+### Completed
+- Updated `start-dev.ps1` to detect ports `8080` and `4173` before launching backend or frontend processes
+- Prevented duplicate backend or Vite windows when one side is already running
+- Added Chrome-first browser launching for the frontend URL with a default-browser fallback
+- Updated the README with the new duplicate-skip behavior and `-NoBrowser` option
+- Tightened the frontend launch command with Vite `--strictPort` so the dev server does not roll over from `4173` to `4174`
+
+### Decisions made
+- Treat local port occupancy as the simplest repo-consistent signal for whether backend or frontend is already running
+- Keep browser launching optional through `-NoBrowser` rather than forcing it in every workflow
+
+### Next steps
+- No tracked implementation tasks remain
+
+## Session 25
+### Goal
+Fix duplicate frontend dev-server startup by centralizing the frontend dev configuration and removing split startup behavior.
+
+### Completed
+- Moved the frontend dev host, port, and strict-port settings into `frontend/vite.config.js`
+- Updated the root startup script to launch the frontend with plain `npm run dev` instead of repeating port flags externally
+- Added frontend-process detection in `start-dev.ps1` so the root launcher skips a second Vite process even before a port conflict surfaces
+- Updated the README and assumptions docs to document one intended frontend dev-server workflow on `127.0.0.1:4173`
+
+### Decisions made
+- Treat `frontend/vite.config.js` as the single source of truth for the frontend dev-server host and port
+- Keep `strictPort: true` because the intended workflow is one frontend dev server on `4173`, not silent rollover to another port
+- Keep the root launcher as the full-stack convenience path, but make it reuse the same frontend startup command as manual frontend development
+
+### Next steps
+- No tracked implementation tasks remain

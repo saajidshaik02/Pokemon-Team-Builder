@@ -215,11 +215,16 @@ Recommended local setup:
 3. Configure the frontend base API URL through an environment variable such as `VITE_API_BASE_URL=http://localhost:8080`.
 4. Keep the backend CORS allow-origin aligned with the frontend dev origin. The current local verification setup used `http://127.0.0.1:4173`.
 
-If you want to match the current verified local setup exactly:
+The frontend dev server configuration is now centralized in `frontend/vite.config.js`, so the intended command is simply:
 ```bash
 cd frontend
-npm run dev -- --host 127.0.0.1 --port 4173
+npm run dev
 ```
+
+That command always targets:
+- host `127.0.0.1`
+- port `4173`
+- `strictPort: true`
 
 Verification commands:
 
@@ -232,6 +237,36 @@ npm run build
 
 ## Full Local Run Flow
 
+Single-command option from the repo root:
+
+```bash
+.\start-dev.cmd
+```
+
+That script opens two PowerShell windows:
+- backend on `http://localhost:8080`
+- frontend on `http://127.0.0.1:4173`
+
+It also keeps the current verified local-origin pairing aligned with backend CORS and the frontend API base URL.
+If either port is already in use, the script skips starting a duplicate process.
+It also opens `http://127.0.0.1:4173` in Chrome when Chrome is installed, with a normal browser fallback otherwise.
+The frontend startup command used by the launcher is the same `npm run dev` command defined in `frontend/package.json` and configured through `frontend/vite.config.js`.
+Do not run `npm run dev` manually at the same time as `.\start-dev.cmd`, because both target the same frontend process on `4173`.
+
+If frontend dependencies are already installed and you want to skip `npm install`:
+
+```bash
+.\start-dev.cmd -SkipInstall
+```
+
+If you want to skip the automatic browser launch:
+
+```bash
+.\start-dev.cmd -SkipInstall -NoBrowser
+```
+
+Manual option:
+
 1. Start the backend:
    ```bash
    cd backend
@@ -242,7 +277,7 @@ npm run build
 3. Start the frontend:
    ```bash
    cd frontend
-   npm run dev -- --host 127.0.0.1 --port 4173
+   npm run dev
    ```
 4. Open the app:
    - `http://127.0.0.1:4173`

@@ -622,10 +622,6 @@ img {
   background: linear-gradient(90deg, var(--color-accent), #f29b54);
 }
 
-.pokedex-empty-state {
-  text-align: left;
-}
-
 .team-builder-summary {
   margin: 0 0 var(--space-4);
 }
@@ -758,10 +754,6 @@ img {
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(109, 98, 87, 0.18);
-}
-
-.analysis-empty-state {
-  text-align: left;
 }
 
 .status-card {

@@ -13,7 +13,6 @@ import useFormState from '../hooks/useFormState.js'
 function PokedexPage() {
   const { values, updateValue } = useFormState({ name: '' })
   const [validationMessage, setValidationMessage] = useState('')
-  const [hasSearched, setHasSearched] = useState(false)
   const [lastSubmittedName, setLastSubmittedName] = useState('')
   const pokemonLookup = useApi(getPokemonByName, { ignoreStaleResponses: true })
 
@@ -21,7 +20,6 @@ function PokedexPage() {
     event.preventDefault()
 
     const trimmedName = values.name.trim()
-    setHasSearched(true)
 
     if (!trimmedName) {
       pokemonLookup.setData(null)
@@ -123,17 +121,6 @@ function PokedexPage() {
 
           <PokemonCard pokemon={pokemon} />
         </>
-      ) : null}
-
-      {!pokemonLookup.isLoading && !pokemon && !pokemonLookup.error && !validationMessage ? (
-        <div className="section-card empty-state-card pokedex-empty-state">
-          <p className="eyebrow">{hasSearched ? 'No Active Result' : 'Empty State'}</p>
-          <h3>{hasSearched ? 'Search again with another Pokemon name' : 'Search for any Pokemon'}</h3>
-          <p>
-            Start with a simple name like <code>pikachu</code>, <code>gengar</code>, or{' '}
-            <code>dragonite</code> to see typing, abilities, and base stats in one place.
-          </p>
-        </div>
       ) : null}
     </section>
   )
